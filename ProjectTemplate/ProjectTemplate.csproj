@@ -91,6 +91,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="Image\icon.png" />
+    <Content Include="Image\icon2.png" />
+    <Content Include="Image\index_back.jpeg" />
     <Content Include="index.html" />
     <Content Include="ProjectServices.asmx" />
     <Content Include="Web.config" />
