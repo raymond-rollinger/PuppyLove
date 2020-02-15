@@ -87,7 +87,7 @@ namespace ProjectTemplate
 		{
 			try
 			{
-				string testQuery = "select * from test";
+				string testQuery = "select * from accounts";
 
 				////////////////////////////////////////////////////////////////////////
 				///here's an example of using the getConString method!
