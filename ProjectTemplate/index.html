@@ -63,11 +63,14 @@
                         //server replied true, so show the accounts panel
                         //showPanel('accountsPanel');
                         //LoadAccounts();
-                        alert("logon success");
+                        //we can comment out the alert, just redirect to home page instead
+                        //alert("logon success");
+                        window.location.href = "home.html";
                     }
                     else {
                         //server replied false, so let the user know
                         //the logon failed
+                        $("").
                         alert("logon failed");
                     }
                 },
@@ -81,6 +84,40 @@
                 }
             });
         }
+
+        function SignUp(user, pass, fullName) {
+            var webMethod = "ProjectServices.asmx/SignUp";
+            var parameters = "{\"user\":\"" + encodeURI(user) + "\",\"pass\":\"" + encodeURI(pass) + "\",\"fullName\":\"" + encodeURI(fullName) + "\"}";
+
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    alert("Account created, you can now login.");
+                    document.getElementById("logOnForm").hidden = false;
+                    document.getElementById("SignUpForm").hidden = true;
+                    document.getElementById("SignUpForm").reset();
+                },
+                error: function (e) {
+                    alert("Failed to create an account. Try again.");
+                }
+            });
+
+        }
+
+        function SwitchForms(form) {
+            if (form == "SignUp") {
+                document.getElementById("logOnForm").hidden = true;
+                document.getElementById("SignUpForm").hidden = false;
+            }
+            else {
+                document.getElementById("logOnForm").hidden = false;
+                document.getElementById("SignUpForm").hidden = true;
+            }
+        }
     </script>
     <!--END OF YOUR OWN JAVASCRIPT-->
     <!--Icon -->
@@ -88,54 +125,8 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <!--AND YOUR OWN CSS CAN GO HERE AS WELL-->
+    <link rel="stylesheet" href="CSS/SiteStyle.css" >
     <style>
-        html,
-        body {
-            height: 100%;
-            text-align: center;
-        }
-
-        body {
-            display: -ms-flexbox;
-            display: flex;
-            -ms-flex-align: center;
-            align-items: center;
-            padding-top: 40px;
-            padding-bottom: 40px;
-        }
-
-        .signin {
-            width: 100%;
-            max-width: 330px;
-            padding: 15px;
-            margin: auto;
-            font-weight: 400;
-        }
-
-        .signin .form-control {
-            position: relative;
-            box-sizing: border-box;
-            height: auto;
-            padding: 10px;
-            font-size: 16px;
-        }
-
-        .signin .form-control:focus {
-            z-index: 2;
-        }
-
-        .signin input[type="text"] {
-            margin-bottom: -1px;
-            border-bottom-right-radius: 0;
-            border-bottom-left-radius: 0;
-        }
-
-        .signin input[type="password"] {
-            margin-bottom: 10px;
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-        }
-
         .background {
             position: absolute;
             background-image: url('./Image/index_back.jpeg');
@@ -148,30 +139,60 @@
             height: 100%;
             opacity: 0.65;
         }
-
     </style>
     <!--END OF YOUR OWN CSS-->
 </head>
 <body>
 
     <div class="background"></div>
-    <form class="signin" onsubmit="LogOn($('#inputUsername').val(), $('#inputPassword').val()); return false;">
+    <form id="logOnForm" class="signin" onsubmit="LogOn($('#inputUsername').val(), $('#inputPassword').val()); return false;">
         <img class="mb-4" src="./Image/icon.png" alt="" width="300" height="194">
         <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+        <label for="inputUsername" class="sr-only">Username</label>
+        <input type="text" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus>
+        <br>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <br />
+        <div class="mb-3">
+            <label>
+                <button class="switchForms" type="button" onclick=SwitchForms("SignUp")>No account? Sign Up Now!</button>
+            </label>
+        </div>
+        <p class="mt-5 mb-3 text-muted">© 2020 Puppy Love</p>
+    </form>
+
+
+
+    <form id="SignUpForm" class="signin" onsubmit="SignUp($('#inputUsername').val(), $('#inputPassword').val(), $('#fullName').val()); return false;" hidden="true">
+        <img class="mb-4" src="./Image/icon.png" alt="" width="300" height="194">
+        <h1 class="h3 mb-3 font-weight-normal">Register your account</h1>
         <label for="inputUsername" class="sr-only">Username</label>
         <input type="text" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus="">
         <br>
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+        <br>
+        <label for="fullName" class="sr-only">Full Name</label>
+        <input type="text" id="fullName" class="form-control" placeholder="Full Name" required="">
+        <br />
+        <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="">Register</button>
+        <br />
         <div class="mb-3">
             <label>
-                <a href="#">Sign Up Now!</a>
+                <button class="switchForms" type="button" onclick=SwitchForms("LogOn")>Existing account? Log On!</button>
             </label>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-        <button onclick="javascript: TestButtonHandler();">Click here to test connection!</button>
-        <p class="mt-5 mb-3 text-muted">© 2020 Poppy Love</p>
+        <p class="mt-5 mb-3 text-muted">© 2020 Puppy Love</p>
     </form>
+
+    
+        <!--Test Connection - Hidden attribute set to true. Set to false or remove if you need to test connection-->
+
+        <button hidden="true" onclick="javascript: TestButtonHandler();">Click here to test connection!</button>
+        
 
 </body>
 </html>

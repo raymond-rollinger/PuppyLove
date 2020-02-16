@@ -34,7 +34,7 @@ namespace ProjectTemplate
         ////////////////////////////////////////////////////////////////////////
 
         [WebMethod(EnableSession = true)] //NOTICE: gotta enable session on each individual method
-        public bool LogOn(string uid, string pass)
+        public bool LogOn(string user, string pass)
         {
             //we return this flag to tell them if they logged in or not
             bool success = false;
@@ -53,7 +53,7 @@ namespace ProjectTemplate
             //tell our command to replace the @parameters with real values
             //we decode them because they came to us via the web so they were encoded
             //for transmission (funky characters escaped, mostly)
-            sqlCommand.Parameters.AddWithValue("@idValue", HttpUtility.UrlDecode(uid));
+            sqlCommand.Parameters.AddWithValue("@userValue", HttpUtility.UrlDecode(user));
             sqlCommand.Parameters.AddWithValue("@passValue", HttpUtility.UrlDecode(pass));
 
             //a data adapter acts like a bridge between our command object and 
@@ -71,11 +71,45 @@ namespace ProjectTemplate
                 //so we can check those values later on other method calls to see if they 
                 //are 1) logged in at all, and 2) and admin or not
                 Session["userName"] = sqlDt.Rows[0]["userName"];
-                Session["password"] = sqlDt.Rows[0]["password"];
+                Session["IsAdmin"] = sqlDt.Rows[0]["IsAdmin"];
                 success = true;
             }
             //return the result!
             return success;
+        }
+
+        [WebMethod(EnableSession = true)] //NOTICE: gotta enable session on each individual method
+        public void SignUp(string userName, string pass, string fullName)
+        {
+            //our connection string comes from our web.config file like we talked about earlier
+            string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
+            //here's our query.  A basic select with nothing fancy.  Note the parameters that begin with @
+            //NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
+            string sqlAddAcct = "insert into accounts(userName, ownerName, password) values('@userValue', '@passValue', '@fullNameValue');";
+                //"SELECT userName, password FROM accounts WHERE userName=@idValue and password=@passValue";
+
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlAddAcct, sqlConnection);
+
+            //tell our command to replace the @parameters with real values
+            //we decode them because they came to us via the web so they were encoded
+            //for transmission (funky characters escaped, mostly)
+            sqlCommand.Parameters.AddWithValue("@userValue", HttpUtility.UrlDecode(userName));
+            sqlCommand.Parameters.AddWithValue("@passValue", HttpUtility.UrlDecode(pass));
+            sqlCommand.Parameters.AddWithValue("@fullNameValue", HttpUtility.UrlDecode(fullName));
+
+            sqlConnection.Open();
+
+            try
+            {
+                int accountID = Convert.ToInt32(sqlCommand.ExecuteScalar());
+            }
+            catch (Exception e)
+            {
+
+            }
+            sqlConnection.Close();
+            //return the result!
         }
 
         /////////////////////////////////////////////////////////////////////////
