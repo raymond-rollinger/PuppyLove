@@ -96,6 +96,7 @@
     <Content Include="index.html" />
     <Content Include="ProjectServices.asmx" />
     <Content Include="Web.config" />
+    <Content Include="signup.html" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />

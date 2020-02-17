@@ -65,59 +65,19 @@
                         //LoadAccounts();
                         //we can comment out the alert, just redirect to home page instead
                         //alert("logon success");
-                        window.location.href = "home.html";
+                        alert("Credentials found!");
                     }
                     else {
-                        //server replied false, so let the user know
-                        //the logon failed
-                        $("").
+                        //\
                         alert("logon failed");
                     }
                 },
                 error: function (e) {
-                    //if something goes wrong in the mechanics of delivering the
-                    //message to the server or the server processing that message,
-                    //then this function mapped to the error key is executed rather
-                    //than the one mapped to the success key.  This is just a garbage
-                    //alert becaue I'm lazy
                     alert("boom...");
                 }
             });
         }
 
-        function SignUp(userName, password, firstName, lastName, email) {
-            var webMethod = "ProjectServices.asmx/SignUp";
-            var parameters = "{\"userName\":\"" + encodeURI(userName) + "\",\"password\":\"" + encodeURI(password) + "\",\"firstName\":\"" + encodeURI(firstName) + "\",\"lastName\":\"" + encodeURI(lastName) + "\",\"email\":\"" + encodeURI(email) + "\"}";
-
-            $.ajax({
-                type: "POST",
-                url: webMethod,
-                data: parameters,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (msg) {
-                    alert("Account created, you can now login.");
-                    document.getElementById("logOnForm").hidden = false;
-                    document.getElementById("SignUpForm").hidden = true;
-                    document.getElementById("SignUpForm").reset();
-                },
-                error: function (e) {
-                    alert("Failed to create an account. Try again.");
-                }
-            });
-
-        }
-
-        function SwitchForms(form) {
-            if (form == "SignUp") {
-                document.getElementById("logOnForm").hidden = true;
-                document.getElementById("SignUpForm").hidden = false;
-            }
-            else {
-                document.getElementById("logOnForm").hidden = false;
-                document.getElementById("SignUpForm").hidden = true;
-            }
-        }
     </script>
     <!--END OF YOUR OWN JAVASCRIPT-->
     <!--Icon -->
@@ -149,7 +109,7 @@
             <img class="mb-4" src="./Image/icon.png" alt="" width="300" height="194">
             <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
             <label for="inputUsername" class="sr-only">Username</label>
-            <input type="text" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus>
+            <input type="text" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus="">
             <br>
             <label for="inputPassword" class="sr-only">Password</label>
             <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
@@ -158,45 +118,15 @@
             <br />
             <div class="mb-3">
                 <label>
-                    <button class="switchForms" type="button" onclick="SwitchForms('SignUp')">No account? Sign Up Now!</button>
+                    <a class="switchForms" href="signup.html">No account? Sign Up Now!</a>
                 </label>
             </div>
         </form>
-
-
-     
-        <form id="SignUpForm" class="signin" onsubmit="SignUp($('#inputUsername').val(), $('#inputPassword').val(), $('#inputFirst').val(), $('#inputLast').val(), $('#inputEmail').val()); return false;" hidden="true">
-            <img class="mb-4" src="./Image/icon.png" alt="" width="300" height="194">
-            <h1 class="h3 mb-3 font-weight-normal">Register your account</h1>
-            <label for="inputUsername" class="sr-only">Username</label>
-            <input type="text" id="inputUsername" class="form-control" placeholder="Username" required="" autofocus="">
-            <br>
-            <label for="inputPassword" class="sr-only">Password</label>
-            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
-            <br>
-            <label for="inputFirst" class="sr-only">First Name</label>
-            <input type="text" id="inputFirst" class="form-control" placeholder="First Name" required="">
-            <br />
-            <label for="inputLast" class="sr-only">Last Name</label>
-            <input type="text" id="inputLast" class="form-control" placeholder="Last Name" required="">
-            <br />
-            <label for="inputEmail" class="sr-only">e-Mail</label>
-            <input type="text" id="inputEmail" class="form-control" placeholder="e-Mail" required="">
-            <br />
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
-            <br />
-            <div class="mb-3">
-                <label>
-                    <button class="switchForms" type="button" onclick="SwitchForms('LogOn')">Existing account? Log On!</button>
-                </label>
-            </div>
-        </form>
-
 
         <!--Test Connection - Hidden attribute set to true. Set to false or remove if you need to test connection-->
 
-        <button hidden="true" onclick="javascript: TestButtonHandler();">Click here to test connection!</button>
-
+        <button onclick="javascript: TestButtonHandler();">Click here to test connection!</button>
+        <br /><br />
         <footer class="footer">
             <p class="mt-5 mb-3 text-muted" style="float: none;">© 2020 Puppy Love</p>
         </footer>
