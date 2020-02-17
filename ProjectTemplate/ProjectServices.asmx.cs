@@ -79,13 +79,13 @@ namespace ProjectTemplate
         }
 
         [WebMethod(EnableSession = true)] //NOTICE: gotta enable session on each individual method
-        public void SignUp(string userName, string pass, string fullName)
+        public void SignUp(string userName, string pass, string firstName, string lastName, string email)
         {
             //our connection string comes from our web.config file like we talked about earlier
             string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
             //here's our query.  A basic select with nothing fancy.  Note the parameters that begin with @
             //NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
-            string sqlAddAcct = "insert into accounts(userName, ownerName, password) values('@userValue', '@passValue', '@fullNameValue');";
+            string sqlAddAcct = "insert into accounts(userName, firstName, lastName, email, password) values(@userValue, @firstNameValue, @lastNameValue, @emailValue, @passValue);";
                 //"SELECT userName, password FROM accounts WHERE userName=@idValue and password=@passValue";
 
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
@@ -94,9 +94,11 @@ namespace ProjectTemplate
             //tell our command to replace the @parameters with real values
             //we decode them because they came to us via the web so they were encoded
             //for transmission (funky characters escaped, mostly)
-            sqlCommand.Parameters.AddWithValue("@userValue", HttpUtility.UrlDecode(userName));
+            sqlCommand.Parameters.AddWithValue("@userValue", HttpUtility.UrlDecode(userName));         
+            sqlCommand.Parameters.AddWithValue("@firstNameValue", HttpUtility.UrlDecode(firstName));
+            sqlCommand.Parameters.AddWithValue("@lastNameValue", HttpUtility.UrlDecode(lastName));
+            sqlCommand.Parameters.AddWithValue("@emailValue", HttpUtility.UrlDecode(email));
             sqlCommand.Parameters.AddWithValue("@passValue", HttpUtility.UrlDecode(pass));
-            sqlCommand.Parameters.AddWithValue("@fullNameValue", HttpUtility.UrlDecode(fullName));
 
             sqlConnection.Open();
 
@@ -104,7 +106,7 @@ namespace ProjectTemplate
             {
                 int accountID = Convert.ToInt32(sqlCommand.ExecuteScalar());
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
