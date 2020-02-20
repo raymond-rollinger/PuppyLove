@@ -60,32 +60,33 @@
 <body>
 
     <div class="background"></div>
-    <form id="SignUpForm" class="signin" onsubmit="SignUp($('#inputUsername').val(), $('#inputPassword').val(), $('#inputFirst').val(), $('#inputLast').val(), $('#inputEmail').val()); return false;">
+    <form id="SignUpForm" class="signin" onsubmit="SignUp($('#inputUsername').val(), $('#inputPassword').val(), $('#inputFirst').val(), $('#inputLast').val(), $('#inputEmail').val()); return false;" >
         <img class="mb-4" src="./Image/icon.png" alt="" width="150" height="97">
         <h4 class="h4 mb-3 font-weight-normal">Register your account</h4>
         <label for="inputUsername" class="sr-only">Username</label>
-        <input type="text" id="inputUsername" class="form-control" placeholder="Username" minlength ="8" required="" autofocus="">
-        
+        <input type="text" id="inputUsername" class="form-control" placeholder="Username" minlength="8" required="" autofocus="">
+
         <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" minlength ="8" required="">
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" minlength="8" required="" name="ps1">
+        <label for="inputPassword2" class="sr-only">Password</label>
+        <input type="password" id="inputPassword2" class="form-control" placeholder="Confirm Password" minlength="8" required="" name="ps2" oninput='ps2.setCustomValidity(ps2.value != ps1.value ? "Passwords do not match." : "")'>
         
         <label for="inputFirst" class="sr-only">First Name</label>
         <input type="text" id="inputFirst" class="form-control" placeholder="First Name" required="">
-        
+
         <label for="inputLast" class="sr-only">Last Name</label>
         <input type="text" id="inputLast" class="form-control" placeholder="Last Name" required="">
-        
+
         <label for="inputEmail" class="sr-only">e-Mail</label>
         <input type="email" id="inputEmail" class="form-control" placeholder="e-Mail" required="">
         <br />
         <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
-        
+
         <div class="mb-3">
             <label>
                 <a class="switchForms" href="index.html">Existing account? Log On!</a>
             </label>
         </div>
-        <p class="mt-5 mb-3 text-muted">© 2020 Puppy Love</p>
     </form>
 
 
