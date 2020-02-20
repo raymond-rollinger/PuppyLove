@@ -36,11 +36,14 @@ body {
 
     .signin input[type="text"] {
         margin-bottom: 10px;
+
     }
 
     .signin input[type="password"] {
         margin-bottom: 10px;
+        
     }
+
 
 .switchForms {
     border: none;
