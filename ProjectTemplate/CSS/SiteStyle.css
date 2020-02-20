@@ -17,6 +17,7 @@ body {
     width: 100%;
     max-width: 330px;
     padding: 15px;
+    padding-bottom:0px;
     margin: auto;
     font-weight: 600;
 }
@@ -25,7 +26,7 @@ body {
         position: relative;
         box-sizing: border-box;
         height: auto;
-        padding: 7px;
+        padding: 10px;
         font-size: 16px;
     }
 
@@ -34,14 +35,11 @@ body {
         }
 
     .signin input[type="text"] {
-        margin-bottom: -1px;
-        border-bottom-right-radius: 0;
-        border-bottom-left-radius: 0;
+        margin-bottom: 10px;
     }
 
     .signin input[type="password"] {
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
+        margin-bottom: 10px;
     }
 
 .switchForms {
