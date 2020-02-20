@@ -142,5 +142,37 @@ namespace ProjectTemplate
 				return "Something went wrong, please check your credentials and db name and try again.  Error: "+e.Message;
 			}
 		}
+
+        [WebMethod(EnableSession = true)] //NOTICE: gotta enable session on each individual method
+        public void AccountInfo(string bio, string city)
+        {
+            //our connection string comes from our web.config file like we talked about earlier
+            string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
+            //NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
+            string sqlAddAcct = "INSERT INTO accounts(bio, city) values(@bioValue, @cityValue) WHERE userName=@userValue";
+            //"SELECT userName, password FROM accounts WHERE userName=@idValue and password=@passValue";
+
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlAddAcct, sqlConnection);
+
+            //tell our command to replace the @parameters with real values
+            //we decode them because they came to us via the web so they were encoded
+            //for transmission (funky characters escaped, mostly)
+            sqlCommand.Parameters.AddWithValue("@bioValue", HttpUtility.UrlDecode(bio));
+            sqlCommand.Parameters.AddWithValue("@cityValue", HttpUtility.UrlDecode(city));
+
+            sqlConnection.Open();
+
+            try
+            {
+                int accountID = Convert.ToInt32(sqlCommand.ExecuteScalar());
+            }
+            catch (Exception)
+            {
+
+            }
+            sqlConnection.Close();
+            //return the result!
+        }
 	}
 }
