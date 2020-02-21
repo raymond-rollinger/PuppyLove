@@ -8,6 +8,8 @@
 
     <script type="text/javascript">
         function initialize() {
+            //get the name of the user's uploaded file from the account table in the DB and 
+            //insert the variable holding the name as the source here (instead of this hardcoded file path)
             $("#userphoto").attr("src", "./Image/WIN_20180624_20_17_38_Pro.jpg")
         }
     </script>
@@ -18,8 +20,8 @@
 </head>
 <body onload="initialize()">
     <header></header>
-    <div>
-        <img id="userphoto" src="" title="User Photo" alt="User Photo"/>
+    <div class="img-container">
+        <img id="userphoto" src="" title="User Photo" alt="User Photo" width="300" height="200"/>
     </div>
     <footer></footer>
 </body>
