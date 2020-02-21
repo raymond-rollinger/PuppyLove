@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Puppy Love</title>
+    <!--DO NOT FORGET THIS SCRIPT TAG SO YOU CAN USE JQUERY!!!!!-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!--YOUR OWN JAVASCRIPT CAN GO RIGHT HERE-->
+    <script type="text/javascript">
+
+        function AccountInfo(bio, city) {
+            var webMethod = "ProjectServices.asmx/AccountInfo";
+            var parameters = "{\"bio\":\"" + encodeURI(bio) + "\",\"city\":\"" + encodeURI(city) + "\";
+
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    alert("Information added to profile.");
+
+                    //need to change this .href to redirect to profiles
+                    //location.href = "index.html"
+                },
+                error: function (e) {
+                    alert("Failed to add information. Try again.");
+                }
+            });
+
+        }
+
+    </script>
+    <!--END OF YOUR OWN JAVASCRIPT-->
+    <!--Icon -->
+    <link rel="./Image/icon" href="./icon2.png">
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!--AND YOUR OWN CSS CAN GO HERE AS WELL-->
+    <link rel="stylesheet" href="CSS/SiteStyle.css">
+    <style>
+
+        .background {
+            position: absolute;
+            background-image: url('./Image/index_back.jpeg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+            opacity: 0.65;
+        }
+    </style>
+    <!--END OF YOUR OWN CSS-->
+</head>
+<body>
+    <div class="background"></div>
+    <form id="AccountInfoForm" class="signin" onsubmit="AccountInfo($('#inputBio').val(), $('#inputCity').val(); return false;">
+        <img class="mb-4" src="./Image/icon.png" alt="" width="150" height="97">
+        <h4 class="h4 mb-3 font-weight-normal">Add account information</h4>
+        <label for="inputBio" class="sr-only">Bio</label>
+        <input type="text" id="inputBio" class="form-control" placeholder="Bio" minlength="0" required="" autofocus="">
+        <label for="inputCity" class="sr-only">City</label>
+        <input type="text" id="inputCity" class="form-control" placeholder="City" minlength="0" required="">
+
+        <br />
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Add Information</button>
+        <p class="mt-5 mb-3 text-muted">© 2020 Puppy Love</p>
+    </form>
+    <!--Test Connection - Hidden attribute set to true. Set to false or remove if you need to test connection-->
+    <button hidden="true" onclick="javascript: TestButtonHandler();">Click here to test connection!</button>
+</body>
+</html>
