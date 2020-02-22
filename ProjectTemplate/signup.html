@@ -6,6 +6,9 @@
     <title>Puppy Love</title>
     <!--DO NOT FORGET THIS SCRIPT TAG SO YOU CAN USE JQUERY!!!!!-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <!--YOUR OWN JAVASCRIPT CAN GO RIGHT HERE-->
     <script type="text/javascript">
@@ -22,7 +25,7 @@
                 dataType: "json",
                 success: function (msg) {
                     alert("Account created, you can now login.");
-                    
+
                     location.href = "index.html"
                 },
                 error: function (e) {
@@ -60,7 +63,7 @@
 <body>
 
     <div class="background"></div>
-    <form id="SignUpForm" class="signin" onsubmit="SignUp($('#inputUsername').val(), $('#inputPassword').val(), $('#inputFirst').val(), $('#inputLast').val(), $('#inputEmail').val()); return false;" >
+    <form id="SignUpForm" class="signin" onsubmit="SignUp($('#inputUsername').val(), $('#inputPassword').val(), $('#inputFirst').val(), $('#inputLast').val(), $('#inputEmail').val()); return false;">
         <img class="mb-4" src="./Image/icon.png" alt="" width="150" height="97">
         <h4 class="h4 mb-3 font-weight-normal">Register your account</h4>
         <label for="inputUsername" class="sr-only">Username</label>
@@ -70,7 +73,7 @@
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" minlength="8" required="" name="ps1">
         <label for="inputPassword2" class="sr-only">Password</label>
         <input type="password" id="inputPassword2" class="form-control" placeholder="Confirm Password" minlength="8" required="" name="ps2" oninput='ps2.setCustomValidity(ps2.value != ps1.value ? "Passwords do not match." : "")'>
-        
+
         <label for="inputFirst" class="sr-only">First Name</label>
         <input type="text" id="inputFirst" class="form-control" placeholder="First Name" required="">
 
@@ -93,6 +96,8 @@
     <!--Test Connection - Hidden attribute set to true. Set to false or remove if you need to test connection-->
 
     <button hidden="true" onclick="javascript: TestButtonHandler();">Click here to test connection!</button>
+
+
 </body>
 
 </html>
