@@ -144,23 +144,24 @@ namespace ProjectTemplate
 		}
 
         [WebMethod(EnableSession = true)] //NOTICE: gotta enable session on each individual method
-        public void AccountInfo(string bio, string city)
+        public void AccountInfo(string bio, string city, string userId)
         {
             //our connection string comes from our web.config file like we talked about earlier
             string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
             //NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
-            string sqlAddAcct = "INSERT INTO accounts(bio, city) values(@bioValue, @cityValue) WHERE userName=@userValue";
-            //"SELECT userName, password FROM accounts WHERE userName=@idValue and password=@passValue";
-
+            //string sqlAddAcct = "INSERT INTO accounts(bio, city) values(@bioValue, @cityValue) (SELECT userName=@userValue");
+            string sqlEditAcct = "UPDATE accounts SET userId=@userName,bio=@bioValue,city=@cityValue WHERE userName=@userIdValue";
+            //string sqlEditAcct = "UPDATE accounts ('bio', 'city') VALUES (@bioValue, @cityValue) WHERE userId=@userValue";
+            //string sqlEditAcct = "UPDATE accounts SET city='hi' WHERE user='Catlover99'";
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
-            MySqlCommand sqlCommand = new MySqlCommand(sqlAddAcct, sqlConnection);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlEditAcct, sqlConnection);
 
             //tell our command to replace the @parameters with real values
             //we decode them because they came to us via the web so they were encoded
             //for transmission (funky characters escaped, mostly)
+			sqlCommand.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(userId));
             sqlCommand.Parameters.AddWithValue("@bioValue", HttpUtility.UrlDecode(bio));
             sqlCommand.Parameters.AddWithValue("@cityValue", HttpUtility.UrlDecode(city));
-
             sqlConnection.Open();
 
             try
@@ -169,7 +170,6 @@ namespace ProjectTemplate
             }
             catch (Exception)
             {
-
             }
             sqlConnection.Close();
             //return the result!

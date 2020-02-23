@@ -38,7 +38,7 @@
             //because we want to wrap our keynames and values in double quotes so we have to
             //escape the double quotes (because the overall string we're creating is in double quotes!)
             var parameters = "{\"uid\":\"" + encodeURI(userId) + "\",\"pass\":\"" + encodeURI(pass) + "\"}";
-
+            console.log(parameters);
             //jQuery ajax method
             $.ajax({
                 //post is more secure than get, and allows
@@ -66,8 +66,13 @@
                         //we can comment out the alert, just redirect to home page instead
                         //alert("logon success");
                         //alert("Credentials found!");
+<<<<<<< Updated upstream
 
                         location.href= "accountInfo.html"
+=======
+                        location.href = "./AccountPage.html"
+                        localStorage.setItem('authenticatedUser', userId);
+>>>>>>> Stashed changes
                     }
                     else {
                         //\

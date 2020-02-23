@@ -11,8 +11,13 @@
 
         function AccountInfo(bio, city) {
             var webMethod = "ProjectServices.asmx/AccountInfo";
+<<<<<<< Updated upstream
             var parameters = "{\"bio\":\"" + encodeURI(bio) + "\",\"city\":\"" + encodeURI(city) + "\";
 
+=======
+            var userId = localStorage.getItem('authenticatedUser');
+            var parameters = JSON.stringify({bio: encodeURI(bio), city: encodeURI(city), userId: encodeURI(userId)});
+>>>>>>> Stashed changes
             $.ajax({
                 type: "POST",
                 url: webMethod,
@@ -20,7 +25,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (msg) {
-                    alert("Information added to profile.");
+                    alert("Information added to profile!!");
 
                     //need to change this .href to redirect to profiles
                     //location.href = "index.html"
