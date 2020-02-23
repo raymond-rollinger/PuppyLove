@@ -29,6 +29,32 @@
             opacity: 0.30;
         }
     </style>
+    <script type="text/javascript">
+        function LogOff() {
+
+            var webMethod = "ProjectServices.asmx/LogOff";
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.d) {
+                        //we logged off, so go back to logon page,
+                        //stop checking messages
+                        //and clear the chat panel
+                        alert("Session ended.");
+                        location.replace("./index.html");
+                    }
+                    else {
+                    }
+                },
+                error: function (e) {
+                    alert("boo...");
+                }
+            });
+        }
+    </script> 
 </head>
 
 <body>
@@ -39,7 +65,7 @@
       <a class="navbar-brand" href="#" style="font-family:Lobster; font-size:30px;">PuppyLove</a>
         <ul class="navbar-nav ml-auto" >
           <li class="nav-item active" >
-            <a class="nav-link border border-secondary rounded" href="#" style="font-family:Odibee Sans; font-size:30px; background-color:#cc6699">Log Out</a>
+            <a class="nav-link border border-secondary rounded" href="#" onclick="LogOff()" style="font-family:Odibee Sans; font-size:30px; background-color:#cc6699">Log Out</a>
         </ul>
     </div>
   </nav>

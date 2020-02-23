@@ -43,7 +43,7 @@ namespace ProjectTemplate
 			string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
 			//here's our query.  A basic select with nothing fancy.  Note the parameters that begin with @
 			//NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
-			string sqlSelect = "SELECT userName, IsAdmin FROM accounts WHERE userName=@userValue and password=@passValue";
+			string sqlSelect = "SELECT accountID, userName, firstName, lastName, IsAdmin FROM accounts WHERE userName=@userValue and password=@passValue";
 
 			//set up our connection object to be ready to use our connection string
 			MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
@@ -70,12 +70,27 @@ namespace ProjectTemplate
 				//if we found an account, store the id and admin status in the session
 				//so we can check those values later on other method calls to see if they 
 				//are 1) logged in at all, and 2) and admin or not
+				Session["accountID"] = sqlDt.Rows[0]["accountID"];
 				Session["userName"] = sqlDt.Rows[0]["userName"];
+				Session["firstName"] = sqlDt.Rows[0]["firstName"];
+				Session["lastName"] = sqlDt.Rows[0]["lastName"];
 				Session["IsAdmin"] = sqlDt.Rows[0]["IsAdmin"];
 				success = true;
+
+				
 			}
 			//return the result!
 			return success;
+		}
+
+		[WebMethod(EnableSession = true)]
+		public bool LogOff()
+		{
+			//if they log off, then we remove the session.  That way, if they access
+			//again later they have to log back on in order for their ID to be back
+			//in the session!
+			Session.Abandon();
+			return true;
 		}
 
 		[WebMethod(EnableSession = true)] //NOTICE: gotta enable session on each individual method
