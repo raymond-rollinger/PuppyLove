@@ -87,8 +87,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="accounthome.html" />
+    <Content Include="AccountPage.html" />
     <Content Include="CSS\SiteStyle.css" />
     <Content Include="Global.asax" />
+    <Content Include="Image\BC2.jpg" />
     <Content Include="Image\icon.png" />
     <Content Include="Image\icon2.png" />
     <Content Include="Image\index_back.jpeg" />
