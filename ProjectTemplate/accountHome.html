@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Puppy Love</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        function initialize() {
+            //get the name of the user's uploaded file from the account table in the DB and 
+            //insert the variable holding the name as the source here (instead of this hardcoded file path)
+            $("#userphoto").attr("src", "./Image/WIN_20180624_20_17_38_Pro.jpg")
+        }
+    </script>
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" >
+    <link rel="stylesheet" href="CSS/SiteStyle.css" > 
+</head>
+<body onload="initialize()">
+    <header></header>
+    <div class="img-container">
+        <img id="userphoto" src="" title="User Photo" alt="User Photo" width="300" height="200"/>
+    </div>
+    <footer></footer>
+</body>
+</html >

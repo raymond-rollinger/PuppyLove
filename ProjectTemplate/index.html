@@ -6,7 +6,9 @@
     <title>Puppy Love</title>
     <!--DO NOT FORGET THIS SCRIPT TAG SO YOU CAN USE JQUERY!!!!!-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <!--YOUR OWN JAVASCRIPT CAN GO RIGHT HERE-->
     <script type="text/javascript">
         function TestButtonHandler() {
@@ -66,13 +68,9 @@
                         //we can comment out the alert, just redirect to home page instead
                         //alert("logon success");
                         //alert("Credentials found!");
-<<<<<<< Updated upstream
 
-                        location.href= "accountInfo.html"
-=======
                         location.href = "./AccountPage.html"
                         localStorage.setItem('authenticatedUser', userId);
->>>>>>> Stashed changes
                     }
                     else {
                         //\
@@ -92,7 +90,7 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <!--AND YOUR OWN CSS CAN GO HERE AS WELL-->
-    <link rel="stylesheet" href="CSS/SiteStyle.css" >
+    <link rel="stylesheet" href="CSS/SiteStyle.css">
     <style>
         .background {
             position: absolute;
@@ -131,9 +129,9 @@
         <p class="mt-5 mb-3 text-muted">© 2020 Puppy Love</p>
     </form>
 
-        <!--Test Connection - Hidden attribute set to true. Set to false or remove if you need to test connection-->
+    <!--Test Connection - Hidden attribute set to true. Set to false or remove if you need to test connection-->
+    <!--<button onclick="javascript: TestButtonHandler();">Click here to test connection!</button>-->
 
-        <!--<button onclick="javascript: TestButtonHandler();">Click here to test connection!</button>-->
 </body>
 
 </html>
