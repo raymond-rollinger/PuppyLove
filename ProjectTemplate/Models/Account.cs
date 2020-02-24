@@ -9,13 +9,9 @@ namespace ProjectTemplate.Models
     {
         public int accountID;
         public string userName;
-        public string firstName;
-        public string lastName;
-        public string email;
+        public string ownerName;
         public string bio;
         public string password;
         public bool IsAdmin;
-        public string city;
-
     }
 }

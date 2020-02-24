@@ -6,19 +6,18 @@
     <title>Puppy Love</title>
     <!--DO NOT FORGET THIS SCRIPT TAG SO YOU CAN USE JQUERY!!!!!-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <!-- Bootstrap core JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <!--YOUR OWN JAVASCRIPT CAN GO RIGHT HERE-->
     <script type="text/javascript">
 
         function AccountInfo(bio, city) {
             var webMethod = "ProjectServices.asmx/AccountInfo";
-            var parameters = "{\"bio\":\"" + encodeURI(bio) + "\",\"city\":\"" + encodeURI(city) + "\"}";
-          
+<<<<<<< Updated upstream
+            var parameters = "{\"bio\":\"" + encodeURI(bio) + "\",\"city\":\"" + encodeURI(city) + "\";
+
+=======
             var userId = localStorage.getItem('authenticatedUser');
             var parameters = JSON.stringify({bio: encodeURI(bio), city: encodeURI(city), userId: encodeURI(userId)});
-
+>>>>>>> Stashed changes
             $.ajax({
                 type: "POST",
                 url: webMethod,
@@ -65,7 +64,7 @@
 </head>
 <body>
     <div class="background"></div>
-    <form id="AccountInfoForm" class="signin" onsubmit="AccountInfo($('#inputBio').val(), $('#inputCity').val()); return false;">
+    <form id="AccountInfoForm" class="signin" onsubmit="AccountInfo($('#inputBio').val(), $('#inputCity').val(); return false;">
         <img class="mb-4" src="./Image/icon.png" alt="" width="150" height="97">
         <h4 class="h4 mb-3 font-weight-normal">Add account information</h4>
         <label for="inputBio" class="sr-only">Bio</label>
@@ -79,6 +78,5 @@
     </form>
     <!--Test Connection - Hidden attribute set to true. Set to false or remove if you need to test connection-->
     <button hidden="true" onclick="javascript: TestButtonHandler();">Click here to test connection!</button>
-
 </body>
 </html>
