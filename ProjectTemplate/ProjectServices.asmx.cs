@@ -159,7 +159,7 @@ namespace ProjectTemplate
 		}
 
         [WebMethod(EnableSession = true)] //NOTICE: gotta enable session on each individual method
-        public void AccountInfo(string bio, string city)
+        public void AccountInfo(string bio, string city, string userName)
         {
             //our connection string comes from our web.config file like we talked about earlier
             string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
@@ -175,6 +175,7 @@ namespace ProjectTemplate
             //for transmission (funky characters escaped, mostly)
             sqlCommand.Parameters.AddWithValue("@bioValue", HttpUtility.UrlDecode(bio));
             sqlCommand.Parameters.AddWithValue("@cityValue", HttpUtility.UrlDecode(city));
+            sqlCommand.Parameters.AddWithValue("@cityValue", HttpUtility.UrlDecode(userName));
 
             sqlConnection.Open();
 
