@@ -23,6 +23,7 @@ namespace ProjectTemplate
 		private string dbID = "ciscapstoners";
 		private string dbPass = "!!Ciscapstoners";
 		private string dbName = "ciscapstoners";
+        public static string GLBuid;
 		////////////////////////////////////////////////////////////////////////
 		
 		////////////////////////////////////////////////////////////////////////
@@ -37,8 +38,9 @@ namespace ProjectTemplate
         public bool LogOn(string uid, string pass)
         {
             //we return this flag to tell them if they logged in or not
+            
             bool success = false;
-
+            
             //our connection string comes from our web.config file like we talked about earlier
             string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
             //here's our query.  A basic select with nothing fancy.  Note the parameters that begin with @
@@ -72,6 +74,7 @@ namespace ProjectTemplate
                 //are 1) logged in at all, and 2) and admin or not
                 Session["userName"] = sqlDt.Rows[0]["userName"];
                 Session["IsAdmin"] = sqlDt.Rows[0]["IsAdmin"];
+                GLBuid = uid;
                 success = true;
             }
             //return the result!
@@ -144,13 +147,14 @@ namespace ProjectTemplate
 		}
 
         [WebMethod(EnableSession = true)] //NOTICE: gotta enable session on each individual method
-        public void AccountInfo(string bio, string city, string userId)
+        public void AccountInfo(string bio, string city)
         {
+            
             //our connection string comes from our web.config file like we talked about earlier
             string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
             //NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
             //string sqlAddAcct = "INSERT INTO accounts(bio, city) values(@bioValue, @cityValue) (SELECT userName=@userValue");
-            string sqlEditAcct = "UPDATE accounts SET userId=@userName,bio=@bioValue,city=@cityValue WHERE userName=@userIdValue";
+            string sqlEditAcct = "UPDATE accounts SET bio=@bioValue,city=@cityValue WHERE userName=@userIdValue";
             //string sqlEditAcct = "UPDATE accounts ('bio', 'city') VALUES (@bioValue, @cityValue) WHERE userId=@userValue";
             //string sqlEditAcct = "UPDATE accounts SET city='hi' WHERE user='Catlover99'";
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
@@ -159,7 +163,7 @@ namespace ProjectTemplate
             //tell our command to replace the @parameters with real values
             //we decode them because they came to us via the web so they were encoded
             //for transmission (funky characters escaped, mostly)
-			sqlCommand.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(userId));
+			sqlCommand.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(GLBuid));
             sqlCommand.Parameters.AddWithValue("@bioValue", HttpUtility.UrlDecode(bio));
             sqlCommand.Parameters.AddWithValue("@cityValue", HttpUtility.UrlDecode(city));
             sqlConnection.Open();
