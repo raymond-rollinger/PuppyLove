@@ -100,12 +100,7 @@
     <Content Include="Web.config" />
     <Content Include="signup.html" />
     <Content Include="accountInfo.html" />
-<<<<<<< HEAD
     <Content Include="profileInfo.html" />
-=======
-    <Content Include="Image\catdog.jpg" />
-    <Content Include="uploadbutton.aspx" />
->>>>>>> raymond-branch
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
@@ -119,12 +114,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="uploadbutton.aspx.cs">
-      <DependentUpon>uploadbutton.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="uploadbutton.aspx.designer.cs">
-      <DependentUpon>uploadbutton.aspx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
