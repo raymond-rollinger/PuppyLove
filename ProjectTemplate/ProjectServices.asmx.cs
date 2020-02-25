@@ -98,7 +98,9 @@ namespace ProjectTemplate
 			//again later they have to log back on in order for their ID to be back
 			//in the session!
 			Session.Abandon();
-			return true;
+            GLBuid = "";
+            return true;
+
 		}
 
 		/////////////////////////////////////////////////////////////////////////
