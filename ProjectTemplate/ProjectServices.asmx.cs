@@ -23,7 +23,6 @@ namespace ProjectTemplate
 		private string dbID = "ciscapstoners";
 		private string dbPass = "!!Ciscapstoners";
 		private string dbName = "ciscapstoners";
-        public static string GLBuid;
 		////////////////////////////////////////////////////////////////////////
 		
 		////////////////////////////////////////////////////////////////////////
@@ -34,7 +33,7 @@ namespace ProjectTemplate
 		}
 
         [WebMethod(EnableSession = true)] //NOTICE: gotta enable session on each individual method
-        public bool LogOn(string uid, string pass)
+        public bool LogOn(string uName, string pass)
         {
             //we return this flag to tell them if they logged in or not
             
@@ -44,7 +43,7 @@ namespace ProjectTemplate
             string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
             //here's our query.  A basic select with nothing fancy.  Note the parameters that begin with @
             //NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
-            string sqlSelect = "SELECT userName, IsAdmin FROM accounts WHERE userName=@userValue and password=@passValue";
+            string sqlSelect = "SELECT accountID, userName, IsAdmin FROM accounts WHERE userName=@userValue and password=@passValue";
 
             //set up our connection object to be ready to use our connection string
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
@@ -54,7 +53,7 @@ namespace ProjectTemplate
             //tell our command to replace the @parameters with real values
             //we decode them because they came to us via the web so they were encoded
             //for transmission (funky characters escaped, mostly)
-            sqlCommand.Parameters.AddWithValue("@userValue", HttpUtility.UrlDecode(uid));
+            sqlCommand.Parameters.AddWithValue("@userValue", HttpUtility.UrlDecode(uName));
             sqlCommand.Parameters.AddWithValue("@passValue", HttpUtility.UrlDecode(pass));
 
             //a data adapter acts like a bridge between our command object and 
@@ -73,7 +72,8 @@ namespace ProjectTemplate
                 //are 1) logged in at all, and 2) and admin or not
                 Session["userName"] = sqlDt.Rows[0]["userName"];
                 Session["IsAdmin"] = sqlDt.Rows[0]["IsAdmin"];
-                GLBuid = uid;
+                Session["accountID"] = sqlDt.Rows[0]["accountID"];
+
                 success = true;
             }
             //return the result!
@@ -122,7 +122,6 @@ namespace ProjectTemplate
 			//again later they have to log back on in order for their ID to be back
 			//in the session!
 			Session.Abandon();
-            GLBuid = "";
             return true;
 
 		}
@@ -157,14 +156,14 @@ namespace ProjectTemplate
 		}
 
         [WebMethod(EnableSession = true)] //NOTICE: gotta enable session on each individual method
-        public void AccountInfo(string bio, string city, string userName)
+        public void AccountInfo(string bio, string city)
         {
             
             //our connection string comes from our web.config file like we talked about earlier
             string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
             //NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
             //string sqlAddAcct = "INSERT INTO accounts(bio, city) values(@bioValue, @cityValue) (SELECT userName=@userValue");
-            string sqlEditAcct = "UPDATE accounts SET bio=@bioValue,city=@cityValue WHERE userName=@userIdValue";
+            string sqlEditAcct = "UPDATE accounts SET bio=@bioValue,city=@cityValue WHERE accountID=@userIdValue";
             //string sqlEditAcct = "UPDATE accounts ('bio', 'city') VALUES (@bioValue, @cityValue) WHERE userId=@userValue";
             //string sqlEditAcct = "UPDATE accounts SET city='hi' WHERE user='Catlover99'";
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
@@ -173,10 +172,9 @@ namespace ProjectTemplate
             //tell our command to replace the @parameters with real values
             //we decode them because they came to us via the web so they were encoded
             //for transmission (funky characters escaped, mostly)
-			sqlCommand.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(GLBuid));
+			sqlCommand.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(Session["accountID"].ToString()));
             sqlCommand.Parameters.AddWithValue("@bioValue", HttpUtility.UrlDecode(bio));
             sqlCommand.Parameters.AddWithValue("@cityValue", HttpUtility.UrlDecode(city));
-            sqlCommand.Parameters.AddWithValue("@userValue", HttpUtility.UrlDecode(userName));
             sqlConnection.Open();
 
             try
@@ -190,13 +188,14 @@ namespace ProjectTemplate
             //return the result!
         }
 
+        [WebMethod(EnableSession = true)]
         public void ProfileInfo(string petName, string breed, string gender, string age, string bio, string userName)
         {
             //our connection string comes from our web.config file like we talked about earlier
             string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
             //NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
             //string sqlAddAcct = "INSERT INTO accounts(bio, city) values(@bioValue, @cityValue) (SELECT userName=@userValue");
-            string sqlEditProfile = "UPDATE profiles SET petName=@petNameValue,breed=@breedValue, gender=@genderValue, age=@ageValue, bio=@bioValue WHERE userName=@userIdValue";
+            string sqlEditProfile = "UPDATE profiles SET petName=@petNameValue,breed=@breedValue, gender=@genderValue, age=@ageValue, bio=@bioValue WHERE accountID=@userIdValue";
 
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
             MySqlCommand sqlCommand = new MySqlCommand(sqlEditProfile, sqlConnection);
@@ -204,13 +203,12 @@ namespace ProjectTemplate
             //tell our command to replace the @parameters with real values
             //we decode them because they came to us via the web so they were encoded
             //for transmission (funky characters escaped, mostly)
-            sqlCommand.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(GLBuid));
+            sqlCommand.Parameters.AddWithValue("@userIdValue", Session["accountID"]);
             sqlCommand.Parameters.AddWithValue("@petNameValue", HttpUtility.UrlDecode(petName));
             sqlCommand.Parameters.AddWithValue("@breedValue", HttpUtility.UrlDecode(breed));
             sqlCommand.Parameters.AddWithValue("@genderValue", HttpUtility.UrlDecode(gender));
             sqlCommand.Parameters.AddWithValue("@ageValue", HttpUtility.UrlDecode(age));
             sqlCommand.Parameters.AddWithValue("@bioValue", HttpUtility.UrlDecode(bio));
-            sqlCommand.Parameters.AddWithValue("@userValue", HttpUtility.UrlDecode(userName));
             sqlConnection.Open();
         }
 	}

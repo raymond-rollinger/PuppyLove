@@ -16,8 +16,8 @@
             var webMethod = "ProjectServices.asmx/AccountInfo";
             var parameters = "{\"bio\":\"" + encodeURI(bio) + "\",\"city\":\"" + encodeURI(city) + "\"}";
           
-            var userId = localStorage.getItem('authenticatedUser');
-            var parameters = JSON.stringify({bio: encodeURI(bio), city: encodeURI(city), userId: encodeURI(userId)});
+            //var userId = localStorage.getItem('authenticatedUser');
+            //var parameters = JSON.stringify({bio: encodeURI(bio), city: encodeURI(city)});
 
             $.ajax({
                 type: "POST",

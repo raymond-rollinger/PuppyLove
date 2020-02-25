@@ -32,14 +32,14 @@
             });
         }
 
-        function LogOn(userId, pass) {
+        function LogOn(uName, pass) {
             //the url of the webservice we will be talking to
             var webMethod = "ProjectServices.asmx/LogOn";
             //the parameters we will pass the service (in json format because curly braces)
             //note we encode the values for transmission over the web.  All the \'s are just
             //because we want to wrap our keynames and values in double quotes so we have to
             //escape the double quotes (because the overall string we're creating is in double quotes!)
-            var parameters = "{\"uid\":\"" + encodeURI(userId) + "\",\"pass\":\"" + encodeURI(pass) + "\"}";
+            var parameters = "{\"uName\":\"" + encodeURI(uName) + "\",\"pass\":\"" + encodeURI(pass) + "\"}";
             console.log(parameters);
             //jQuery ajax method
             $.ajax({
@@ -70,10 +70,10 @@
                         //alert("Credentials found!");
 
                         location.href = "./AccountPage.html"
-                        localStorage.setItem('authenticatedUser', userId);
+
                     }
                     else {
-                        //\
+         
                         alert("logon failed");
                     }
                 },
