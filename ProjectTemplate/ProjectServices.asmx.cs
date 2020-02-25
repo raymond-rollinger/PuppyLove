@@ -163,5 +163,29 @@ namespace ProjectTemplate
             sqlConnection.Close();
             //return the result!
         }
+
+        public void ProfileInfo(string petName, string breed, string gender, string age, string bio, string userName)
+        {
+            //our connection string comes from our web.config file like we talked about earlier
+            string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
+            //NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
+            //string sqlAddAcct = "INSERT INTO accounts(bio, city) values(@bioValue, @cityValue) (SELECT userName=@userValue");
+            string sqlEditProfile = "UPDATE profiles SET petName=@petNameValue,breed=@breedValue, gender=@genderValue, age=@ageValue, bio=@bioValue WHERE userName=@userIdValue";
+
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlEditProfile, sqlConnection);
+
+            //tell our command to replace the @parameters with real values
+            //we decode them because they came to us via the web so they were encoded
+            //for transmission (funky characters escaped, mostly)
+            sqlCommand.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(GLBuid));
+            sqlCommand.Parameters.AddWithValue("@petNameValue", HttpUtility.UrlDecode(petName));
+            sqlCommand.Parameters.AddWithValue("@breedValue", HttpUtility.UrlDecode(breed));
+            sqlCommand.Parameters.AddWithValue("@genderValue", HttpUtility.UrlDecode(gender));
+            sqlCommand.Parameters.AddWithValue("@ageValue", HttpUtility.UrlDecode(age));
+            sqlCommand.Parameters.AddWithValue("@bioValue", HttpUtility.UrlDecode(bio));
+            sqlCommand.Parameters.AddWithValue("@userValue", HttpUtility.UrlDecode(userName));
+            sqlConnection.Open();
+        }
 	}
 }
