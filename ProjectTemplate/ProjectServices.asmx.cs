@@ -23,6 +23,7 @@ namespace ProjectTemplate
 		private string dbID = "ciscapstoners";
 		private string dbPass = "!!Ciscapstoners";
 		private string dbName = "ciscapstoners";
+
 		////////////////////////////////////////////////////////////////////////
 		
 		////////////////////////////////////////////////////////////////////////
@@ -43,7 +44,9 @@ namespace ProjectTemplate
             string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
             //here's our query.  A basic select with nothing fancy.  Note the parameters that begin with @
             //NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
+
             string sqlSelect = "SELECT accountID, userName, IsAdmin FROM accounts WHERE userName=@userValue and password=@passValue";
+
 
             //set up our connection object to be ready to use our connection string
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
@@ -73,7 +76,6 @@ namespace ProjectTemplate
                 Session["userName"] = sqlDt.Rows[0]["userName"];
                 Session["IsAdmin"] = sqlDt.Rows[0]["IsAdmin"];
                 Session["accountID"] = sqlDt.Rows[0]["accountID"];
-
                 success = true;
             }
             //return the result!
@@ -189,7 +191,7 @@ namespace ProjectTemplate
         }
 
         [WebMethod(EnableSession = true)]
-        public void ProfileInfo(string petName, string breed, string gender, string age, string bio, string userName)
+        public void ProfileInfo(string petName, string breed, string gender, string age, string bio)
         {
             //our connection string comes from our web.config file like we talked about earlier
             string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
@@ -197,19 +199,29 @@ namespace ProjectTemplate
             //string sqlAddAcct = "INSERT INTO accounts(bio, city) values(@bioValue, @cityValue) (SELECT userName=@userValue");
             string sqlEditProfile = "UPDATE profiles SET petName=@petNameValue,breed=@breedValue, gender=@genderValue, age=@ageValue, bio=@bioValue WHERE accountID=@userIdValue";
 
+
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
             MySqlCommand sqlCommand = new MySqlCommand(sqlEditProfile, sqlConnection);
 
             //tell our command to replace the @parameters with real values
             //we decode them because they came to us via the web so they were encoded
             //for transmission (funky characters escaped, mostly)
-            sqlCommand.Parameters.AddWithValue("@userIdValue", Session["accountID"]);
+
+            sqlCommand.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(Session["accountID"].ToString()));
             sqlCommand.Parameters.AddWithValue("@petNameValue", HttpUtility.UrlDecode(petName));
             sqlCommand.Parameters.AddWithValue("@breedValue", HttpUtility.UrlDecode(breed));
             sqlCommand.Parameters.AddWithValue("@genderValue", HttpUtility.UrlDecode(gender));
             sqlCommand.Parameters.AddWithValue("@ageValue", HttpUtility.UrlDecode(age));
             sqlCommand.Parameters.AddWithValue("@bioValue", HttpUtility.UrlDecode(bio));
             sqlConnection.Open();
+            try
+            {
+                int accountID = Convert.ToInt32(sqlCommand.ExecuteScalar());
+            }
+            catch (Exception)
+            {
+            }
+            sqlConnection.Close();
         }
 	}
 }
