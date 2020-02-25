@@ -89,9 +89,33 @@ namespace ProjectTemplate
             //NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
             string sqlAddAcct = "INSERT INTO accounts(userName, firstName, lastName, email, password) VALUES(@userValue, @firstNameValue, @lastNameValue, @emailValue, @passValue)";
             //"SELECT userName, password FROM accounts WHERE userName=@idValue and password=@passValue";
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlAddAcct, sqlConnection);
+
+            //tell our command to replace the @parameters with real values
+            //we decode them because they came to us via the web so they were encoded
+            //for transmission (funky characters escaped, mostly)
+            sqlCommand.Parameters.AddWithValue("@userValue", HttpUtility.UrlDecode(userName));
+            sqlCommand.Parameters.AddWithValue("@firstNameValue", HttpUtility.UrlDecode(firstName));
+            sqlCommand.Parameters.AddWithValue("@lastNameValue", HttpUtility.UrlDecode(lastName));
+            sqlCommand.Parameters.AddWithValue("@emailValue", HttpUtility.UrlDecode(email));
+            sqlCommand.Parameters.AddWithValue("@passValue", HttpUtility.UrlDecode(password));
+
+            sqlConnection.Open();
+
+            try
+            {
+                int accountID = Convert.ToInt32(sqlCommand.ExecuteScalar());
+            }
+            catch (Exception)
+            {
+
+            }
+            sqlConnection.Close();
+            //return the result!
         }
 
-		[WebMethod(EnableSession = true)]
+        [WebMethod(EnableSession = true)]
 		public bool LogOff()
 		{
 			//if they log off, then we remove the session.  That way, if they access
