@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Puppy Love</title>
+    <!--DO NOT FORGET THIS SCRIPT TAG SO YOU CAN USE JQUERY!!!!!-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!--YOUR OWN JAVASCRIPT CAN GO RIGHT HERE-->
+    <script type="text/javascript">
+
+        function profileInfo(petName, breed, gender, age, bio) {
+            var webMethod = "ProjectServices.asmx/profileInfo";
+            var parameters = "{\"petName\":\"" + encodeURI(petName) + "\",\"breed\":\"" + encodeURI(breed) + "\",\"gender\":\"" + encodeURI(gender) + "\",\"age\":\"" + encodeURI(age) + "\",\"bio\":\"" + encodeURI(bio) + "\"}";
+
+            var userId = localStorage.getItem('authenticatedUser');
+            var parameters = JSON.stringify({petName: encodeURI(petName), breed: encodeURI(breed), gender: encodeURI(gender), age: encodeURI(age), bio: encodeURI(bio)});
+
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    alert("Information added to your pet's profile");
+
+                    //need to change this .href to redirect to profiles
+                    location.href = "index.html"
+                },
+                error: function (e) {
+                    alert("Failed to add information. Try again.");
+                }
+            });
+
+        }
+
+    </script>
+    <!--END OF YOUR OWN JAVASCRIPT-->
+    <!--Icon -->
+    <link rel="./Image/icon" href="./icon2.png">
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!--AND YOUR OWN CSS CAN GO HERE AS WELL-->
+    <link rel="stylesheet" href="CSS/SiteStyle.css">
+    <style>
+
+        .background {
+            position: absolute;
+            background-image: url('./Image/index_back.jpeg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+            opacity: 0.65;
+        }
+    </style>
+    <!--END OF YOUR OWN CSS-->
+</head>
+<body>
+    <div class="background"></div>
+        <form id="ProfileInfoForm" class="signin" onsubmit="ProfileInfo($('#inputPetName').val(), $('#inputBreed').val(), $('#inputGender').val(), $('#inputAge').val(), $('#inputBio').val()); return false;">
+            <img class="mb-4" src="./Image/icon.png" alt="" width="150" height="97">
+            <h4 class="h4 mb-3 font-weight-normal">Add/Edit Profile Information</h4>
+
+            <label for="inputPetName" class="sr-only">Pet Name</label>
+            <input type="text" id="inputPetName" class="form-control" placeholder="Pet Name" minlength="0" required="" autofocus="">
+
+            <label for="inputBreed" class="sr-only">Breed</label>
+            <input type="text" id="inputBreed" class="form-control" placeholder="Breed" minlength="0" required="">
+
+            <label for="inputGender" class="sr-only">Gender</label>
+            <input type="text" id="inputGender" class="form-control" placeholder="Gender" minlength="0" required="" autofocus="">
+
+            <label for="inputAge" class="sr-only">Pet's Age</label>
+            <input type="text" id="age" class="form-control" placeholder="Age" minlength="0" required="" autofocus="">
+
+            <label for="inputbio" class="sr-only"</label>
+            <input type="text" id="bio" class="form-control" placeholder="bio" minlength="0" required="" autofocus="">
+
+            <br/>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Add</button>
+        </form>
+    
+    <!--Test Connection - Hidden attribute set to true. Set to false or remove if you need to test connection-->
+    <button hidden="true" onclick="javascript: TestButtonHandler();">Click here to test connection!</button>
+</body>
+</html>
