@@ -30,8 +30,8 @@
         }
     </style>
     <script type="text/javascript">
+        
         function LogOff() {
-
             var webMethod = "ProjectServices.asmx/LogOff";
             $.ajax({
                 type: "POST",
@@ -54,10 +54,20 @@
                 }
             });
         }
+        function loadData() {
+            var accountData = JSON.parse(localStorage.getItem("account"))
+            document.getElementById("username").innerHTML = accountData["userName"];
+            if (accountData["bio"] === "") {
+                document.getElementById("bio_msg").innerHTML = "You Don't have a BIO on your account!";
+            }
+            else {
+                document.getElementById("bio_msg").innerHTML = "BIO: " + accountData["bio"];
+            }
+        }
     </script> 
 </head>
 
-<body>
+<body onload="loadData()">
 
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color:#ff6699">
@@ -80,7 +90,7 @@
         </div>
       <!-- /.col-lg-8 -->
       <div class="col-lg-9">
-        <h1 class="font-weight-bold">Sherman</h1>
+        <h1 id="username" class="font-weight-bold">Sherman</h1>
         <p id="bio_msg">I love My puppy more than myself!!</p>
         <a class="btn btn-primary" href="./accountInfo.html">Edit Account Info</a>
         <a class="btn btn-primary" href="./profileInfo.html">Edit Profile Info</a>

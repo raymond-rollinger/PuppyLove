@@ -34,18 +34,19 @@ namespace ProjectTemplate
 		}
 
         [WebMethod(EnableSession = true)] //NOTICE: gotta enable session on each individual method
-        public bool LogOn(string uName, string pass)
+        public string LogOn(string uName, string pass)
         {
             //we return this flag to tell them if they logged in or not
             
-            bool success = false;
             
+            List<string> accountData = new List<string>();
+            string account = ""; 
             //our connection string comes from our web.config file like we talked about earlier
             string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
             //here's our query.  A basic select with nothing fancy.  Note the parameters that begin with @
             //NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
 
-            string sqlSelect = "SELECT accountID, userName, IsAdmin FROM accounts WHERE userName=@userValue and password=@passValue";
+            string sqlSelect = "SELECT accountID, userName, firstName, lastName, email, bio, city FROM accounts WHERE userName=@userValue and password=@passValue";
 
 
             //set up our connection object to be ready to use our connection string
@@ -74,12 +75,23 @@ namespace ProjectTemplate
                 //so we can check those values later on other method calls to see if they 
                 //are 1) logged in at all, and 2) and admin or not
                 Session["userName"] = sqlDt.Rows[0]["userName"];
-                Session["IsAdmin"] = sqlDt.Rows[0]["IsAdmin"];
                 Session["accountID"] = sqlDt.Rows[0]["accountID"];
-                success = true;
+                Session["firstName"] = sqlDt.Rows[0]["firstName"];
+                Session["lastName"] = sqlDt.Rows[0]["lastName"];
+                Session["email"] = sqlDt.Rows[0]["email"];
+                Session["bio"] = sqlDt.Rows[0]["bio"];
+                Session["city"] = sqlDt.Rows[0]["city"];
+                account = "{" + "\"userName\"" + ":" + "\"" + Session["userName"].ToString() + "\"" + "," 
+                    + "\"accountID\"" + ":" + "\"" + Session["accountID"].ToString() + "\"" + "," 
+                    + "\"firstName\"" + ":" + "\"" + Session["firstName"].ToString() + "\"" + "," 
+                    + "\"lastName\"" + ":" + "\"" + Session["lastName"].ToString() + "\"" + "," 
+                    + "\"email\"" + ":" + "\"" + Session["email"].ToString() + "\"" + ","
+                    + "\"bio\"" + ":" + "\"" + Session["bio"].ToString() + "\"" + ","
+                    + "\"city\"" + ":" + "\"" + Session["city"].ToString() + "\"" + "}";
+                
             }
             //return the result!
-            return success;
+            return account;
         }
 
         [WebMethod(EnableSession = true)] //NOTICE: gotta enable session on each individual method
@@ -223,5 +235,7 @@ namespace ProjectTemplate
             }
             sqlConnection.Close();
         }
+
+
 	}
 }
