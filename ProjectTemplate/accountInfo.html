@@ -15,7 +15,7 @@
         function AccountInfo(bio, city) {
             var webMethod = "ProjectServices.asmx/AccountInfo";
             var parameters = "{\"bio\":\"" + encodeURI(bio) + "\",\"city\":\"" + encodeURI(city) + "\"}";
-          
+
             //var userId = localStorage.getItem('authenticatedUser');
             //var parameters = JSON.stringify({bio: encodeURI(bio), city: encodeURI(city)});
 
@@ -29,7 +29,7 @@
                     alert("Information added to profile!!");
                     location.href = "./AccountPage.html"
                     //need to change this .href to redirect to profiles
-                    //location.href = "index.html"
+                    location.href = "./AccountPage.html"
                 },
                 error: function (e) {
                     alert("Failed to add information. Try again.");
