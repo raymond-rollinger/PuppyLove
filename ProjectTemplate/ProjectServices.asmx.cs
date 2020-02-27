@@ -243,7 +243,7 @@ namespace ProjectTemplate
             string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
             //NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
             //string sqlAddAcct = "INSERT INTO accounts(bio, city) values(@bioValue, @cityValue) (SELECT userName=@userValue");
-            string sqlAddPet = "INSERT INTO profiles(petName, breed, gender, age, bio) VALUES(@petName, @breed, @gender, @age, @bio) WHERE accountId=@userIdValue";
+            string sqlAddPet = "INSERT INTO profiles (petName, breed, gender, age, bio, accountId) VALUES (@petNameValue, @breedValue, @genderValue, @ageValue, @bioValue, @accountIdValue)";
 
 
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
@@ -252,20 +252,29 @@ namespace ProjectTemplate
             //tell our command to replace the @parameters with real values
             //we decode them because they came to us via the web so they were encoded
             //for transmission (funky characters escaped, mostly)
-
-            sqlCommand.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(Session["accountID"].ToString()));
+            /*
             sqlCommand.Parameters.AddWithValue("@petNameValue", HttpUtility.UrlDecode(petName));
             sqlCommand.Parameters.AddWithValue("@breedValue", HttpUtility.UrlDecode(breed));
             sqlCommand.Parameters.AddWithValue("@genderValue", HttpUtility.UrlDecode(gender));
             sqlCommand.Parameters.AddWithValue("@ageValue", HttpUtility.UrlDecode(age));
             sqlCommand.Parameters.AddWithValue("@bioValue", HttpUtility.UrlDecode(bio));
+            sqlCommand.Parameters.AddWithValue("@accountIdValue", 1);
+            */
+
+            sqlCommand.Parameters.AddWithValue("@petNameValue", HttpUtility.UrlDecode(petName));
+            sqlCommand.Parameters.AddWithValue("@breedValue", HttpUtility.UrlDecode(breed));
+            sqlCommand.Parameters.AddWithValue("@genderValue", HttpUtility.UrlDecode(gender));
+            sqlCommand.Parameters.AddWithValue("@ageValue", HttpUtility.UrlDecode(age));
+            sqlCommand.Parameters.AddWithValue("@bioValue", HttpUtility.UrlDecode(bio));
+            sqlCommand.Parameters.AddWithValue("@accountIdValue", HttpUtility.UrlDecode(Session["accountID"].ToString()));
             sqlConnection.Open();
             try
             {
                 int accountID = Convert.ToInt32(sqlCommand.ExecuteScalar());
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                throw e;
             }
             sqlConnection.Close();
         }
