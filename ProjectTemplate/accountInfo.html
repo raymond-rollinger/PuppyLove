@@ -10,14 +10,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <!--YOUR OWN JAVASCRIPT CAN GO RIGHT HERE-->
+
     <script type="text/javascript">
 
         function AccountInfo(bio, city) {
             var webMethod = "ProjectServices.asmx/AccountInfo";
             var parameters = "{\"bio\":\"" + encodeURI(bio) + "\",\"city\":\"" + encodeURI(city) + "\"}";
-          
-            var userId = localStorage.getItem('authenticatedUser');
-            var parameters = JSON.stringify({bio: encodeURI(bio), city: encodeURI(city), userId: encodeURI(userId)});
+
+            //var userId = localStorage.getItem('authenticatedUser');
+            //var parameters = JSON.stringify({bio: encodeURI(bio), city: encodeURI(city)});
 
             $.ajax({
                 type: "POST",
@@ -27,9 +28,8 @@
                 dataType: "json",
                 success: function (msg) {
                     alert("Information added to profile!!");
-
+                    location.href = "./AccountPage.html"
                     //need to change this .href to redirect to profiles
-                    //location.href = "./index.html"
                 },
                 error: function (e) {
                     alert("Failed to add information. Try again.");
@@ -37,7 +37,7 @@
             });
 
         }
-
+      
     </script>
     <!--END OF YOUR OWN JAVASCRIPT-->
     <!--Icon -->
