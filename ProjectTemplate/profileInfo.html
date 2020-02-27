@@ -16,8 +16,8 @@
             var webMethod = "ProjectServices.asmx/ProfileInfo";
             var parameters = "{\"petName\":\"" + encodeURI(petName) + "\",\"breed\":\"" + encodeURI(breed) + "\",\"gender\":\"" + encodeURI(gender) + "\",\"age\":\"" + encodeURI(age) + "\",\"bio\":\"" + encodeURI(bio) + "\"}";
 
-            var userId = localStorage.getItem('authenticatedUser');
-            var parameters = JSON.stringify({petName: encodeURI(petName), breed: encodeURI(breed), gender: encodeURI(gender), age: encodeURI(age), bio: encodeURI(bio)});
+            //var userId = localStorage.getItem('authenticatedUser');
+            //var parameters = JSON.stringify({petName: encodeURI(petName), breed: encodeURI(breed), gender: encodeURI(gender), age: encodeURI(age), bio: encodeURI(bio)});
 
             $.ajax({
                 type: "POST",
@@ -41,7 +41,7 @@
     </script>
     <!--END OF YOUR OWN JAVASCRIPT-->
     <!--Icon -->
-    <link rel="./Image/icon" href="./icon2.png">
+    <link rel="icon" href="./Image/icon2.png">
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <!--AND YOUR OWN CSS CAN GO HERE AS WELL-->
@@ -65,7 +65,7 @@
 </head>
 <body>
     <div class="background"></div>
-        <form id="ProfileInfoForm" class="signin" onsubmit="ProfileInfo($('#inputPetName').val(), $('#inputBreed').val(), $('#inputGender').val(), $('#inputAge').val(), $('#inputBio').val()); return false;">
+        <form id="ProfileInfoForm" class="signin" onsubmit="profileInfo($('#inputPetName').val(), $('#inputBreed').val(), $('#inputGender').val(), $('#inputAge').val(), $('#inputBio').val()); return false;">
             <img class="mb-4" src="./Image/icon.png" alt="" width="150" height="97">
             <h4 class="h4 mb-3 font-weight-normal">Add/Edit Profile Information</h4>
 
