@@ -105,6 +105,7 @@
     <Content Include="CSS\LoadAccounts.css" />
     <Content Include="ViewUserAccounts.html" />
     <Content Include="AdminServices.asmx" />
+    <Content Include="addPet.html" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
