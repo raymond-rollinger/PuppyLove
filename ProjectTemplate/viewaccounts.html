@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!--DO NOT FORGET THIS SCRIPT TAG SO YOU CAN USE JQUERY!!!!!-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lobster|Odibee+Sans&display=swap" rel="stylesheet">
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <style>
+
+        body {
+            padding-top: 56px;
+        }
+
+        .background {
+            background-image: url('Image/index_back.jpeg');
+            position: absolute;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+            opacity: 0.30;
+        }
+    </style>
+    <script type="text/javascript">function LogOff() {
+
+            var webMethod = "ProjectServices.asmx/LogOff";
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.d) {
+                        //we logged off, so go back to logon page,
+                        //stop checking messages
+                        //and clear the chat panel
+                        alert("Session ended.");
+                        location.replace("./index.html");
+                    }
+                    else {
+                    }
+                },
+                error: function (e) {
+                    alert("boo...");
+                }
+            });
+        }</script>
+</head>
+<body>
+    <div class="background"></div>
+    <div class="container">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color:#ff6699">
+            <div class="container ">
+                <a class="navbar-brand" href="#" style="font-family:Lobster; font-size:30px;">PuppyLove</a>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link border border-secondary rounded" href="#" onclick="LogOff()" style="font-family:Odibee Sans; font-size:30px; background-color:#cc6699">Log Out</a>
+                </ul>
+            </div>
+        </nav>
+
+
+        <!--<div class="col-md-4 mb-5">-->
+        <table>
+            <tr>
+                <td>
+                    Hello
+                </td>
+            </tr>
+        </table>
+        <!--</div>-->
+    </div>
+</body>
+</html>

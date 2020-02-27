@@ -101,6 +101,10 @@
     <Content Include="signup.html" />
     <Content Include="accountInfo.html" />
     <Content Include="profileInfo.html" />
+    <Content Include="uploadbutton.aspx" />
+    <Content Include="CSS\LoadAccounts.css" />
+    <Content Include="ViewUserAccounts.html" />
+    <Content Include="AdminServices.asmx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
@@ -114,6 +118,15 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="uploadbutton.aspx.cs">
+      <DependentUpon>uploadbutton.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="uploadbutton.aspx.designer.cs">
+      <DependentUpon>uploadbutton.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AdminServices.asmx.cs">
+      <DependentUpon>AdminServices.asmx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
