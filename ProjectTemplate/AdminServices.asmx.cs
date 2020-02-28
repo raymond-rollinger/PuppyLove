@@ -48,8 +48,8 @@ namespace ProjectTemplate
                     {
                         accounts.Add(new Models.Account
                         {
-                            accountID = Convert.ToInt32(sqlDt.Rows[i]["id"]),
-                            userName = sqlDt.Rows[i]["userid"].ToString(),
+                            accountID = Convert.ToInt32(sqlDt.Rows[i]["accountID"]),
+                            userName = sqlDt.Rows[i]["userName"].ToString(),
                             password = sqlDt.Rows[i]["pass"].ToString(),
                             firstName = sqlDt.Rows[i]["firstname"].ToString(),
                             lastName = sqlDt.Rows[i]["lastname"].ToString(),
@@ -134,7 +134,7 @@ namespace ProjectTemplate
                 {
                     accountRequests.Add(new Models.Account
                     {
-                        accountID = Convert.ToInt32(sqlDt.Rows[i]["id"]),
+                        accountID = Convert.ToInt32(sqlDt.Rows[i]["accountID"]),
                         firstName = sqlDt.Rows[i]["firstName"].ToString(),
                         lastName = sqlDt.Rows[i]["lastName"].ToString(),
                         email = sqlDt.Rows[i]["email"].ToString()
