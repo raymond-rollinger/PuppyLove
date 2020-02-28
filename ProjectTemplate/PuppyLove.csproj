@@ -104,7 +104,6 @@
     <Content Include="uploadbutton.aspx" />
     <Content Include="CSS\LoadAccounts.css" />
     <Content Include="ViewUserAccounts.html" />
-    <Content Include="AdminServices.asmx" />
     <Content Include="addPet.html" />
   </ItemGroup>
   <ItemGroup>
@@ -124,9 +123,6 @@
     </Compile>
     <Compile Include="uploadbutton.aspx.designer.cs">
       <DependentUpon>uploadbutton.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="AdminServices.asmx.cs">
-      <DependentUpon>AdminServices.asmx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
