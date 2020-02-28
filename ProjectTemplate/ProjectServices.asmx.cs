@@ -279,10 +279,10 @@ namespace ProjectTemplate
         }
 
         [WebMethod(EnableSession = true)] //NOTICE: gotta enable session on each individual method
-        public string loadpet()
+        public string Loadpet(string accID)
         {
             //we return this flag to tell them if they logged in or not
-            string petinfo = "";
+            string petinfo="";
             //our connection string comes from our web.config file like we talked about earlier
             string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
             //here's our query.  A basic select with nothing fancy.  Note the parameters that begin with @
@@ -299,7 +299,7 @@ namespace ProjectTemplate
             //tell our command to replace the @parameters with real values
             //we decode them because they came to us via the web so they were encoded
             //for transmission (funky characters escaped, mostly)
-            sqlCommand.Parameters.AddWithValue("@userValue", HttpUtility.UrlDecode(Session["accountID"].ToString()));
+            sqlCommand.Parameters.AddWithValue("@userValue", HttpUtility.UrlDecode(accID));
             
 
             //a data adapter acts like a bridge between our command object and 
