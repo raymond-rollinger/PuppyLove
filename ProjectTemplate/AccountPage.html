@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -18,7 +18,7 @@
         }
         .background {
             background-image: url('Image/index_back.jpeg');
-            position: absolute;
+            position: fixed;
             background-repeat: no-repeat;
             background-attachment: fixed;
             background-size: cover;
@@ -30,9 +30,7 @@
         }
     </style>
     <script type="text/javascript">
-        var accountData = JSON.parse(localStorage.getItem("account"));
-
-
+        
         function LogOff() {
             var webMethod = "ProjectServices.asmx/LogOff";
             $.ajax({
@@ -57,6 +55,7 @@
             });
         }
         function loadData() {
+            var accountData = JSON.parse(localStorage.getItem("account"))
             document.getElementById("username").innerHTML = accountData["userName"];
             if (accountData["bio"] === "") {
                 document.getElementById("bio_msg").innerHTML = "You Don't have a BIO on your account!";
@@ -65,14 +64,6 @@
                 document.getElementById("bio_msg").innerHTML = "BIO: " + accountData["bio"];
             }
         }
-
-        function CheckAdminStatus() {
-            var isAdmin = accountData["isAdmin"];
-            if (isAdmin === 2) {
-                document.getElementById('btnViewAccounts').css('display', 'block');
-            }
-        }
-
     </script> 
 </head>
 
@@ -104,7 +95,6 @@
         <a class="btn btn-primary" href="./addPet.html">Add Pet</a> 
         <a class="btn btn-primary" href="./accountInfo.html">Edit Account Info</a> 
         <a class="btn btn-primary" href="./profileInfo.html">Edit Profile Info</a> 
-        <a class="btn btn-primary" href="./ViewUserAccounts.html" id="btnViewAccounts" onload="CheckAdminStatus()">View User Accounts</a>
       </div>
       <!-- /.col-md-4 -->
     </div>
@@ -131,32 +121,7 @@
           </div>
         </div>
       </div>
-      <!-- /.col-md-4 -->
-      <div class="col-md-4 mb-5">
-        <div class="card h-100">
-            <div class="card-body">
-                <img src="Image/icon.png" />
-                <h2 class="card-title">Pet Name</h2>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod tenetur ex natus at dolorem enim! Nesciunt pariatur voluptatem sunt quam eaque, vel, non in id dolore voluptates quos eligendi labore.</p>
-            </div>
-          <div class="card-footer">
-            <a href="#" class="btn btn-primary btn-sm">Start!</a>
-          </div>
-        </div>
-      </div>
-      <!-- /.col-md-4 -->
-      <div class="col-md-4 mb-5">
-        <div class="card h-100">
-            <div class="card-body">
-                <img src="Image/icon.png" />
-                <h2 class="card-title">Pet Name</h2>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus quam molestias corporis quod, ea minima accusamus.</p>
-            </div>
-          <div class="card-footer">
-              <a href="#" class="btn btn-primary btn-sm">Start!</a>
-          </div>
-        </div>
-      </div>
+      
       <!-- /.col-md-4 -->
 
     </div>
