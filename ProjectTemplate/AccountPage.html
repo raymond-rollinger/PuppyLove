@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -30,7 +30,9 @@
         }
     </style>
     <script type="text/javascript">
-        
+        var accountData = JSON.parse(localStorage.getItem("account"));
+
+
         function LogOff() {
             var webMethod = "ProjectServices.asmx/LogOff";
             $.ajax({
@@ -55,7 +57,6 @@
             });
         }
         function loadData() {
-            var accountData = JSON.parse(localStorage.getItem("account"))
             document.getElementById("username").innerHTML = accountData["userName"];
             if (accountData["bio"] === "") {
                 document.getElementById("bio_msg").innerHTML = "You Don't have a BIO on your account!";
@@ -64,6 +65,14 @@
                 document.getElementById("bio_msg").innerHTML = "BIO: " + accountData["bio"];
             }
         }
+
+        function CheckAdminStatus() {
+            var isAdmin = accountData["isAdmin"];
+            if (isAdmin === 2) {
+                document.getElementById('btnViewAccounts').css('display', 'block');
+            }
+        }
+
     </script> 
 </head>
 
@@ -95,6 +104,7 @@
         <a class="btn btn-primary" href="./addPet.html">Add Pet</a> 
         <a class="btn btn-primary" href="./accountInfo.html">Edit Account Info</a> 
         <a class="btn btn-primary" href="./profileInfo.html">Edit Profile Info</a> 
+        <a class="btn btn-primary" href="./ViewUserAccounts.html" id="btnViewAccounts" onload="CheckAdminStatus()">View User Accounts</a>
       </div>
       <!-- /.col-md-4 -->
     </div>

@@ -43,7 +43,7 @@ namespace ProjectTemplate
             //here's our query.  A basic select with nothing fancy.  Note the parameters that begin with @
             //NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
 
-            string sqlSelect = "SELECT accountID, userName, firstName, lastName, email, bio, city FROM accounts WHERE userName=@userValue and password=@passValue";
+            string sqlSelect = "SELECT accountID, userName, firstName, lastName, email, bio, isAdmin, city FROM accounts WHERE userName=@userValue and password=@passValue";
 
 
             //set up our connection object to be ready to use our connection string
@@ -77,6 +77,7 @@ namespace ProjectTemplate
                 Session["lastName"] = sqlDt.Rows[0]["lastName"];
                 Session["email"] = sqlDt.Rows[0]["email"];
                 Session["bio"] = sqlDt.Rows[0]["bio"];
+                Session["isAdmin"] = sqlDt.Rows[0]["isAdmin"];
                 Session["city"] = sqlDt.Rows[0]["city"];
                 account = "{" + "\"userName\"" + ":" + "\"" + Session["userName"].ToString() + "\"" + "," 
                     + "\"accountID\"" + ":" + "\"" + Session["accountID"].ToString() + "\"" + "," 
@@ -84,6 +85,7 @@ namespace ProjectTemplate
                     + "\"lastName\"" + ":" + "\"" + Session["lastName"].ToString() + "\"" + "," 
                     + "\"email\"" + ":" + "\"" + Session["email"].ToString() + "\"" + ","
                     + "\"bio\"" + ":" + "\"" + Session["bio"].ToString() + "\"" + ","
+                    + "\"isAdmin\"" + ":" + "\"" + Session["isAdmin"] + "\"" + ","
                     + "\"city\"" + ":" + "\"" + Session["city"].ToString() + "\"" + "}";
                 
             }
