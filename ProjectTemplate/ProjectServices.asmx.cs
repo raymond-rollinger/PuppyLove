@@ -281,6 +281,68 @@ namespace ProjectTemplate
             sqlConnection.Close();
         }
 
+        [WebMethod(EnableSession = true)]
+        public Models.Account[] GetAccounts()
+        {
+            //check out the return type.  It's an array of Account objects.  You can look at our custom Account class in this solution to see that it's 
+            //just a container for public class-level variables.  It's a simple container that asp.net will have no trouble converting into json.  When we return
+            //sets of information, it's a good idea to create a custom container class to represent instances (or rows) of that information, and then return an array of those objects.  
+            //Keeps everything simple.
 
-	}
+            //WE ONLY SHARE ACCOUNTS WITH LOGGED IN USERS!
+            if (Session["accountID"] != null)
+            {
+                DataTable sqlDt = new DataTable("accounts");
+
+                string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
+                string sqlSelect = "select accountID, userName, password, firstName, lastName, email from accounts where Active=1 order by lastName";
+
+                MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+                MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+
+                //gonna use this to fill a data table
+                MySqlDataAdapter sqlDa = new MySqlDataAdapter(sqlCommand);
+                //filling the data table
+                sqlDa.Fill(sqlDt);
+
+                //loop through each row in the dataset, creating instances
+                //of our container class Account.  Fill each acciount with
+                //data from the rows, then dump them in a list.
+                List<Models.Account> accounts = new List<Models.Account>();
+                for (int i = 0; i < sqlDt.Rows.Count; i++)
+                {
+                    //only share user id and pass info with admins!
+                    if (Convert.ToInt32(Session["isAdmin"]) == 2)
+                    {
+                        accounts.Add(new Models.Account
+                        {
+                            accountID = Convert.ToInt32(sqlDt.Rows[i]["accountID"]),
+                            userName = sqlDt.Rows[i]["userName"].ToString(),
+                            password = sqlDt.Rows[i]["pass"].ToString(),
+                            firstName = sqlDt.Rows[i]["firstname"].ToString(),
+                            lastName = sqlDt.Rows[i]["lastname"].ToString(),
+                            email = sqlDt.Rows[i]["email"].ToString()
+                        });
+                    }
+                    else
+                    {
+                        accounts.Add(new Models.Account
+                        {
+                            accountID = Convert.ToInt32(sqlDt.Rows[i]["id"]),
+                            firstName = sqlDt.Rows[i]["firstname"].ToString(),
+                            lastName = sqlDt.Rows[i]["lastname"].ToString(),
+                            email = sqlDt.Rows[i]["email"].ToString()
+                        });
+                    }
+                }
+                //convert the list of accounts to an array and return!
+                return accounts.ToArray();
+            }
+            else
+            {
+                //if they're not logged in, return an empty array
+                return new Models.Account[0];
+            }
+        }
+    }
 }
