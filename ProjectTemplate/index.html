@@ -34,6 +34,8 @@
         }
 
         function LogOn(uName, pass) {
+            document.getElementById("signbtn").style.display = "none";
+            document.getElementById("spsignbtn").style.display = "block";
             //the url of the webservice we will be talking to
             var webMethod = "ProjectServices.asmx/LogOn";
             //the parameters we will pass the service (in json format because curly braces)
@@ -62,8 +64,17 @@
                     //since our logon web method simply returns a true/false, that value is mapped
                     //to a generic property of the server response called d (I assume short for data
                     //but honestly I don't know...)
-                    account = JSON.parse(msg.d)
-                    if (account["userName"] = uName) {
+                    
+                    if (msg.d === ""){
+                        account = { "userName": "none"};
+                    }
+                    else {
+                        account = JSON.parse(msg.d);
+                        
+                        
+                    }
+                    if (account["userName"] === uName) {
+                        
                         //server replied true, so show the accounts panel
                         //showPanel('accountsPanel');
                         //LoadAccounts();
@@ -75,8 +86,9 @@
                         location.href = "./AccountPage.html"
                     }
                     else {
-         
-                        alert("logon failed");
+                        document.getElementById("signbtn").style.display = "block";
+                        document.getElementById("spsignbtn").style.display = "none";
+                        alert("Username and/or Password Is Incorrect");
                     }
                 },
                 error: function (e) {
@@ -95,7 +107,7 @@
     <link rel="stylesheet" href="CSS/SiteStyle.css">
     <style>
         .background {
-            position: absolute;
+            position: fixed;
             background-image: url('./Image/index_back.jpeg');
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -121,7 +133,11 @@
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
         <br />
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" style="display:block" id="signbtn">Sign in</button>
+        <button class="btn btn-primary btn-lg btn-block"style="display: none" id="spsignbtn">
+            <span class="spinner-border spinner-border-sm"></span>
+            Loading..
+        </button>
         <br />
         <div class="mb-3">
             <label>

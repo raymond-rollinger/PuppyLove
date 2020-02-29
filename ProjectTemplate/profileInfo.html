@@ -12,12 +12,38 @@
     <!--YOUR OWN JAVASCRIPT CAN GO RIGHT HERE-->
     <script type="text/javascript">
 
-        function profileInfo(petName, breed, gender, age, bio) {
+        function loadpetinfo() {
+            var accountData = JSON.parse(localStorage.getItem("account"))
+            var petinfo;
+            var accID = accountData["accountID"]
+            var webMethod = "ProjectServices.asmx/Loadpet";
+            var parameters = "{\"accID\":\"" + encodeURI(accID) + "\"}";
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    petinfo = JSON.parse(msg.d);
+                    console.log(petinfo)
+                    document.getElementById("inputPetName").value = petinfo["petName"]
+                    document.getElementById("inputBreed").value = petinfo["breed"]
+                    document.getElementById("inputGender").value = petinfo["gender"]
+                    document.getElementById("inputAge").value = petinfo["age"]
+                    document.getElementById("inputBio").value = petinfo["petbio"]
+
+                },
+                error: function (e) {
+                    alert("boom...");
+                }
+            });
+        }
+
+
+        function ProfileInfo(petName, breed, gender, age, bio) {
             var webMethod = "ProjectServices.asmx/ProfileInfo";
             var parameters = "{\"petName\":\"" + encodeURI(petName) + "\",\"breed\":\"" + encodeURI(breed) + "\",\"gender\":\"" + encodeURI(gender) + "\",\"age\":\"" + encodeURI(age) + "\",\"bio\":\"" + encodeURI(bio) + "\"}";
-
-            //var userId = localStorage.getItem('authenticatedUser');
-            //var parameters = JSON.stringify({petName: encodeURI(petName), breed: encodeURI(breed), gender: encodeURI(gender), age: encodeURI(age), bio: encodeURI(bio)});
 
             $.ajax({
                 type: "POST",
@@ -26,10 +52,10 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (msg) {
-                    alert("Information added to your pet's profile");
+                    alert("Your pet's profile has been changed.");
 
                     //need to change this .href to redirect to profiles
-                    //location.href = "index.html"
+                    location.href = "AccountPage.html"
                 },
                 error: function (e) {
                     alert("Failed to add information. Try again.");
@@ -63,32 +89,32 @@
     </style>
     <!--END OF YOUR OWN CSS-->
 </head>
-<body>
+<body onload="loadpetinfo()">
     <div class="background"></div>
-        <form id="ProfileInfoForm" class="signin" onsubmit="profileInfo($('#inputPetName').val(), $('#inputBreed').val(), $('#inputGender').val(), $('#inputAge').val(), $('#inputBio').val()); return false;">
-            <img class="mb-4" src="./Image/icon.png" alt="" width="150" height="97">
-            <h4 class="h4 mb-3 font-weight-normal">Add/Edit Profile Information</h4>
+    <form id="ProfileInfoForm" class="signin" onsubmit="ProfileInfo($('#inputPetName').val(), $('#inputBreed').val(), $('#inputGesnder').val(), $('#inputAge').val(), $('#inputBio').val()); return false;">
+        <img class="mb-4" src="./Image/icon.png" alt="" width="150" height="97">
+        <h4 class="h4 mb-3 font-weight-normal">Edit Profile Information</h4>
 
-            <label for="inputPetName" class="sr-only">Pet Name</label>
-            <input type="text" id="inputPetName" class="form-control" placeholder="Pet Name" minlength="0" required="" autofocus="">
+        <label for="inputPetName" class="sr-only">Pet Name</label>
+        <input type="text" id="inputPetName" class="form-control" placeholder="Pet Name" minlength="0" required="" autofocus="">
 
-            <label for="inputBreed" class="sr-only">Breed</label>
-            <input type="text" id="inputBreed" class="form-control" placeholder="Breed" minlength="0" required="">
+        <label for="inputBreed" class="sr-only">Breed</label>
+        <input type="text" id="inputBreed" class="form-control" placeholder="Breed" minlength="0" required="">
 
-            <label for="inputGender" class="sr-only">Gender</label>
-            <input type="text" id="inputGender" class="form-control" placeholder="Gender" minlength="0" required="" autofocus="">
+        <label for="inputGender" class="sr-only">Gender</label>
+        <input type="text" id="inputGesnder" class="form-control" placeholder="Gender" minlength="0" required="" autofocus="">
 
-            <label for="inputAge" class="sr-only">Pet's Age</label>
-            <input type="text" id="inputAge" class="form-control" placeholder="Age" minlength="0" required="" autofocus="">
+        <label for="inputAge" class="sr-only">Pet's Age</label>
+        <input type="text" id="inputAge" class="form-control" placeholder="Age" minlength="0" required="" autofocus="">
 
-            <label for="inputbio" class="sr-only">Bio</label>
-            <input type="text" id="inputBio" class="form-control" placeholder="Bio" minlength="0" required="" autofocus="">
-          
-            <br/>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Add</button>
-        </form>
-    
+        <label for="inputbio" class="sr-only">Bio</label>
+        <input type="text" id="inputBio" class="form-control" placeholder="Bio" minlength="0" required="" autofocus="">
+
+        <br />
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Edit!</button>
+    </form>
+
     <!--Test Connection - Hidden attribute set to true. Set to false or remove if you need to test connection-->
-    <button hidden="true" onclick="javascript: TestButtonHandler();">Click here to test connection!</button>
+    <!--<button hidden="true" onclick="javascript: TestButtonHandler();">Click here to test connection!</button>-->
 </body>
 </html>
