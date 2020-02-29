@@ -31,7 +31,7 @@
         }
     </style>
     <script type="text/javascript">
-
+        
         function LogOff() {
             var webMethod = "ProjectServices.asmx/LogOff";
             $.ajax({
@@ -65,6 +65,13 @@
             else {
                 document.getElementById("bio_msg").innerHTML = "BIO: " + accountData["bio"];
             }
+            if (accountData["imageFileName"] === "") {
+                document.getElementById("userPhoto").src = "Image/icon2.png";
+            }
+            else {
+                document.getElementById("userPhoto").src = "Image/" + accountData["imageFileName"];
+            }
+         
             // load pet info part
             var petinfo;
             var accID = accountData["accountID"]
@@ -126,13 +133,14 @@
         <!-- Heading Row -->
         <div class="row align-items-center my-5">
             <div class="col-lg-3">
-                <img class="img-fluid rounded mb-4 mb-lg-0" src="Image/icon2.png" alt="User Photo" width="200" height="200">
+                <img id="userPhoto" class="img-fluid rounded mb-4 mb-lg-0" src="" alt="User Photo" width="200" height="200">
             </div>
             <!-- /.col-lg-8 -->
             <div class="col-lg-9">
                 <h1 id="firstLast" class="font-weight-bold">This should be the User full name</h1>
                 <p id="bio_msg" style="font-size:20px">This should be the User's Bio</p>
                 <a class="btn btn-primary" href="./accountInfo.html">Edit Account Info</a>
+                <a class="btn btn-primary" href="./uploadbutton.aspx">Upload a Photo</a>
             </div>
             <!-- /.col-md-4 -->
         </div>
@@ -140,7 +148,7 @@
         <!-- Call to Action Well -->
         <div class="card text-white my-5 py-4 text-center" style="background-color:#ff6699">
             <div class="card-body">
-                <p class="text-white m-0" style="font-size:20px;">Welcome back! Hurry up and book your next appointment for your pet!</p>
+                <p class="text-white m-0" style="font-size:20px;">Welcome back! Hurry and book your next appointment for your pet!</p>
             </div>
         </div>
 
@@ -176,7 +184,6 @@
 
     </div>
     <!-- /.container -->
-
 
 
 </body>
