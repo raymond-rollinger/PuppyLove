@@ -66,10 +66,10 @@
                 document.getElementById("bio_msg").innerHTML = "BIO: " + accountData["bio"];
             }
             if (accountData["imageFileName"] === "") {
-                document.getElementById("userPhoto").src = "Image/icon2.png";
+                document.getElementById("userphoto").src = "Image/icon2.png";
             }
             else {
-                document.getElementById("userPhoto").src = "Image/" + accountData["imageFileName"];
+                document.getElementById("userphoto").src = "Image/" + accountData["imageFileName"];
             }
          
             // load pet info part
@@ -97,6 +97,12 @@
                         document.getElementById("petgender").innerHTML = "<strong>Gender: </strong>" + petinfo["gender"]
                         document.getElementById("petage").innerHTML = "<strong>Age: </strong>" + petinfo["age"]
                         document.getElementById("petbio").innerHTML = "<strong>Bio: </strong>" + petinfo["petbio"]
+                        if (petinfo["imageFileName"] === "") {
+                            document.getElementById("petphoto").src = "Image/icon2.png";
+                        }
+                        else {
+                            document.getElementById("petphoto").src = "Image/" + petinfo["imageFileName"]
+                        }
                     }
                 },
                 error: function (e) {
@@ -133,7 +139,7 @@
         <!-- Heading Row -->
         <div class="row align-items-center my-5">
             <div class="col-lg-3">
-                <img id="userPhoto" class="img-fluid rounded mb-4 mb-lg-0" src="" alt="User Photo" width="200" height="200">
+                <img id="userphoto" class="img-fluid rounded mb-4 mb-lg-0" src="" alt="User Photo" width="200" height="200">
             </div>
             <!-- /.col-lg-8 -->
             <div class="col-lg-9">
@@ -157,7 +163,7 @@
             <div class="col-md-4 mb-5" id="petcard" style="display:block;">
                 <div class="card h-100">
                     <div class="card-body">
-                        <img src="Image/cat.png" width="300" height="200" />
+                        <img id="petphoto" src="" width="300" height="200" />
                         <h2 class="card-title" id="petname">Pet Name</h2>
                         <p class="card-text" id="petbreed" style="font-size:20px;">This should be the pet breed</p>
                         <p class="card-text" id="petgender" style="font-size:20px;">This should be the pet gender</p>
