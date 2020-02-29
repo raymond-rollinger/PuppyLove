@@ -14,7 +14,6 @@ namespace ProjectTemplate
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	[System.ComponentModel.ToolboxItem(false)]
 	[System.Web.Script.Services.ScriptService]
-
 	public class ProjectServices : System.Web.Services.WebService
 	{
 		////////////////////////////////////////////////////////////////////////
@@ -46,7 +45,7 @@ namespace ProjectTemplate
             //here's our query.  A basic select with nothing fancy.  Note the parameters that begin with @
             //NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
 
-            string sqlSelect = "SELECT accountID, userName, firstName, lastName, email, bio, city FROM accounts WHERE userName=@userValue and password=@passValue";
+            string sqlSelect = "SELECT accountID, userName, firstName, lastName, email, bio, city, imageFileName FROM accounts WHERE userName=@userValue and password=@passValue";
 
 
             //set up our connection object to be ready to use our connection string
@@ -81,14 +80,16 @@ namespace ProjectTemplate
                 Session["email"] = sqlDt.Rows[0]["email"];
                 Session["bio"] = sqlDt.Rows[0]["bio"];
                 Session["city"] = sqlDt.Rows[0]["city"];
+                Session["imageFileName"] = sqlDt.Rows[0]["imageFileName"];
                 account = "{" + "\"userName\"" + ":" + "\"" + Session["userName"].ToString() + "\"" + "," 
                     + "\"accountID\"" + ":" + "\"" + Session["accountID"].ToString() + "\"" + "," 
                     + "\"firstName\"" + ":" + "\"" + Session["firstName"].ToString() + "\"" + "," 
                     + "\"lastName\"" + ":" + "\"" + Session["lastName"].ToString() + "\"" + "," 
                     + "\"email\"" + ":" + "\"" + Session["email"].ToString() + "\"" + ","
                     + "\"bio\"" + ":" + "\"" + Session["bio"].ToString() + "\"" + ","
-                    + "\"city\"" + ":" + "\"" + Session["city"].ToString() + "\"" + "}";
-                
+                    + "\"city\"" + ":" + "\"" + Session["city"].ToString() + "\"" + ","
+                    +"\"imageFileName\"" + ":" + "\"" + Session["imageFileName"].ToString() + "\"" + "}";
+
             }
             //return the result!
             return account;
@@ -232,8 +233,56 @@ namespace ProjectTemplate
             }
             catch (Exception)
             {
+                
             }
             sqlConnection.Close();
+        }
+
+        [WebMethod(EnableSession = true)]
+        public string UploadPhoto(string filename, bool pet)
+        {
+            string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
+            string sqlEditProfile;
+            string sqlGetProfileFirstName;
+            string name = "";
+
+            if (pet)
+            {
+                sqlEditProfile = "UPDATE profiles SET imageFileName=@filename WHERE accountID=@userIdValue";
+                sqlGetProfileFirstName = "SELECT petName FROM profiles WHERE accountID=@userIdValue";
+            }
+
+            else
+            {
+                sqlEditProfile = "UPDATE accounts SET imageFileName=@filename WHERE accountID=@userIdValue";
+                sqlGetProfileFirstName = "SELECT firstName FROM accounts WHERE accountID=@userIdValue";
+            }
+
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+            MySqlCommand sqlCommand1 = new MySqlCommand(sqlEditProfile, sqlConnection);
+            MySqlCommand sqlCommand2 = new MySqlCommand(sqlGetProfileFirstName, sqlConnection);
+            sqlCommand1.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(Session["accountID"].ToString()));
+            sqlCommand1.Parameters.AddWithValue("@filename", HttpUtility.UrlDecode(filename));
+            sqlCommand2.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(Session["accountID"].ToString()));
+            sqlConnection.Open();
+            try
+            {
+                int accountID = Convert.ToInt32(sqlCommand1.ExecuteScalar());
+                MySqlDataReader dr = sqlCommand2.ExecuteReader();
+                if(dr.HasRows)
+                {
+                    dr.Read();
+                    name = dr.GetString(0);
+                }
+                dr.Close();
+            }
+            catch (Exception)
+            {
+            }
+            sqlConnection.Close();
+
+            return name;
+            
         }
 
 

@@ -63,7 +63,14 @@
             else {
                 document.getElementById("bio_msg").innerHTML = "BIO: " + accountData["bio"];
             }
+            if (accountData["imageFileName"] === "") {
+                document.getElementById("userPhoto").src = "Image/icon2.png";
+            }
+            else {
+                document.getElementById("userPhoto").src = "Image/" + accountData["imageFileName"];
+            }
         }
+        
     </script> 
 </head>
 
@@ -86,15 +93,16 @@
     <!-- Heading Row -->
     <div class="row align-items-center my-5">
         <div class="col-lg-3">
-            <img class="img-fluid rounded mb-4 mb-lg-0" src="Image/icon2.png" alt="User Photo" width="200" height="200">
+            <img id="userPhoto" class="img-fluid rounded mb-4 mb-lg-0" src="" alt="User Photo" width="200" height="200">
         </div>
       <!-- /.col-lg-8 -->
-      <div class="col-lg-9">
-        <h1 id="username" class="font-weight-bold">Sherman</h1>
-        <p id="bio_msg">I love My puppy more than myself!!</p>
-        <a class="btn btn-primary" href="./accountInfo.html">Edit Account Info</a>
-        <a class="btn btn-primary" href="./profileInfo.html">Edit Profile Info</a>
-      </div>
+        <div class="col-lg-9">
+            <h1 id="username" class="font-weight-bold">Sherman</h1>
+            <p id="bio_msg">I love My puppy more than myself!!</p>
+            <a class="btn btn-primary" href="./uploadbutton.aspx">Upload Photo</a>
+            <a class="btn btn-primary" href="./accountInfo.html">Edit Account Info</a>
+            <a class="btn btn-primary" href="./profileInfo.html">Edit Pet Profile Info</a>
+        </div>
       <!-- /.col-md-4 -->
     </div>
     <!-- /.row -->
@@ -153,7 +161,6 @@
 
   </div>
   <!-- /.container -->
-
 
 
 </body>

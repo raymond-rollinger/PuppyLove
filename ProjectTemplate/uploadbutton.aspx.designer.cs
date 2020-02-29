@@ -20,5 +20,11 @@ namespace ProjectTemplate {
 		protected System.Web.UI.WebControls.Button UploadSubmit;
 		
 		protected System.Web.UI.WebControls.Label StatusLabel;
-	}
+
+        protected System.Web.UI.WebControls.RadioButton UserPhotoRadioBtn;
+
+        protected System.Web.UI.WebControls.RadioButton PetPhotoRadioBtn;
+
+        protected System.Web.UI.WebControls.HyperLink HomePageLink;
+    }
 }
