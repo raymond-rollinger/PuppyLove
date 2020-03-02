@@ -57,6 +57,9 @@
         }
         function loadData() {
             var accountData = JSON.parse(localStorage.getItem("account"))
+            if (accountData["isAdmin"] == "false") {
+                document.getElementById("btnAccounts").hidden = true;
+            }
             document.getElementById("username").innerHTML = accountData["userName"];
             document.getElementById("firstLast").innerHTML = accountData["firstName"] + " " + accountData["lastName"];
             if (accountData["bio"] === "") {
@@ -109,7 +112,7 @@
                     alert("boom...");
                 }
             });
-        }
+        }      
     </script>
 </head>
 
@@ -147,6 +150,7 @@
                 <p id="bio_msg" style="font-size:20px">This should be the User's Bio</p>
                 <a class="btn btn-primary" href="./accountInfo.html">Edit Account Info</a>
                 <a class="btn btn-primary" href="./uploadbutton.aspx">Upload a Photo</a>
+                <a class="btn btn-primary" href="./ViewUserAccounts.html" id="btnAccounts">View All Users</a>
             </div>
             <!-- /.col-md-4 -->
         </div>

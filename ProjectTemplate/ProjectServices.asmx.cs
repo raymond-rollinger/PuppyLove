@@ -80,7 +80,7 @@ namespace ProjectTemplate
                 Session["city"] = sqlDt.Rows[0]["city"];
                 Session["imageFileName"] = sqlDt.Rows[0]["imageFileName"];
                 account = "{" + "\"userName\"" + ":" + "\"" + Session["userName"].ToString() + "\"" + "," 
-                    + "\"accountID\"" + ":" + "\"" + Session["accountID"].ToString() + "\"" + "," 
+                    + "\"accountID\"" + ":" + "\"" + Session["accountID"] + "\"" + "," 
                     + "\"firstName\"" + ":" + "\"" + Session["firstName"].ToString() + "\"" + "," 
                     + "\"lastName\"" + ":" + "\"" + Session["lastName"].ToString() + "\"" + "," 
                     + "\"email\"" + ":" + "\"" + Session["email"].ToString() + "\"" + ","
@@ -398,7 +398,7 @@ namespace ProjectTemplate
                 DataTable sqlDt = new DataTable("accounts");
 
                 string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
-                string sqlSelect = "select accountID, userName, password, firstName, lastName, email from accounts where Active=1 order by lastName";
+                string sqlSelect = "select accountID, userName, firstName, lastName, email, password from accounts order by lastName";
 
                 MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
                 MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
@@ -415,28 +415,15 @@ namespace ProjectTemplate
                 for (int i = 0; i < sqlDt.Rows.Count; i++)
                 {
                     //only share user id and pass info with admins!
-                    if (Convert.ToInt32(Session["isAdmin"]) == 2)
-                    {
                         accounts.Add(new Models.Account
                         {
                             accountID = Convert.ToInt32(sqlDt.Rows[i]["accountID"]),
                             userName = sqlDt.Rows[i]["userName"].ToString(),
-                            password = sqlDt.Rows[i]["pass"].ToString(),
-                            firstName = sqlDt.Rows[i]["firstname"].ToString(),
-                            lastName = sqlDt.Rows[i]["lastname"].ToString(),
+                            password = sqlDt.Rows[i]["password"].ToString(),
+                            firstName = sqlDt.Rows[i]["firstName"].ToString(),
+                            lastName = sqlDt.Rows[i]["lastName"].ToString(),
                             email = sqlDt.Rows[i]["email"].ToString()
                         });
-                    }
-                    else
-                    {
-                        accounts.Add(new Models.Account
-                        {
-                            accountID = Convert.ToInt32(sqlDt.Rows[i]["id"]),
-                            firstName = sqlDt.Rows[i]["firstname"].ToString(),
-                            lastName = sqlDt.Rows[i]["lastname"].ToString(),
-                            email = sqlDt.Rows[i]["email"].ToString()
-                        });
-                    }
                 }
                 //convert the list of accounts to an array and return!
                 return accounts.ToArray();

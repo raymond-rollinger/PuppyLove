@@ -73,15 +73,7 @@
                         
                         
                     }
-                    if (account["userName"] === uName) {
-                        
-                        //server replied true, so show the accounts panel
-                        //showPanel('accountsPanel');
-                        //LoadAccounts();
-                        //we can comment out the alert, just redirect to home page instead
-                        //alert("logon success");
-                        //alert("logon success");
-                        //alert("Credentials found!");
+                    if (account["userName"] === uName) {                
                         window.localStorage.setItem("account", msg.d);
                         location.href = "./AccountPage.html"
                     }
@@ -92,7 +84,9 @@
                     }
                 },
                 error: function (e) {
-                    alert("boom...");
+                    document.getElementById("signbtn").style.display = "block";
+                    document.getElementById("spsignbtn").style.display = "none";
+                    alert(msg.d);
                 }
             });
         }
