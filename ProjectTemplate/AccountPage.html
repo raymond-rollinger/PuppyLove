@@ -16,9 +16,10 @@
         body {
             padding-top: 56px;
         }
+
         .background {
             background-image: url('Image/index_back.jpeg');
-            position: absolute;
+            position: fixed;
             background-repeat: no-repeat;
             background-attachment: fixed;
             background-size: cover;
@@ -43,7 +44,7 @@
                         //we logged off, so go back to logon page,
                         //stop checking messages
                         //and clear the chat panel
-                        alert("Session ended.");
+                        alert("You have been signed out.");
                         location.replace("./index.html");
                     }
                     else {
@@ -56,105 +57,144 @@
         }
         function loadData() {
             var accountData = JSON.parse(localStorage.getItem("account"))
+            if (accountData["isAdmin"] == "false") {
+                document.getElementById("btnAccounts").hidden = true;
+            }
             document.getElementById("username").innerHTML = accountData["userName"];
+            document.getElementById("firstLast").innerHTML = accountData["firstName"] + " " + accountData["lastName"];
             if (accountData["bio"] === "") {
                 document.getElementById("bio_msg").innerHTML = "You Don't have a BIO on your account!";
             }
             else {
                 document.getElementById("bio_msg").innerHTML = "BIO: " + accountData["bio"];
             }
-        }
-    </script> 
+            if (accountData["imageFileName"] === "") {
+                document.getElementById("userphoto").src = "Image/icon2.png";
+            }
+            else {
+                document.getElementById("userphoto").src = "Image/" + accountData["imageFileName"];
+            }
+         
+            // load pet info part
+            var petinfo;
+            var accID = accountData["accountID"]
+            console.log(accID)
+            var webMethod = "ProjectServices.asmx/Loadpet";
+            var parameters = "{\"accID\":\"" + encodeURI(accID) + "\"}";
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.d === "") {
+                        document.getElementById("petcard").style.display = "none";
+                        document.getElementById("blocker").className = "col-md-4 mb-5"
+                    }
+                    else {
+                        petinfo = JSON.parse(msg.d);
+                        console.log(petinfo)
+                        document.getElementById("petname").innerHTML = "<strong>Name: </strong>" + petinfo["petName"]
+                        document.getElementById("petbreed").innerHTML = "<strong>Breed: </strong>" + petinfo["breed"]
+                        document.getElementById("petgender").innerHTML = "<strong>Gender: </strong>" + petinfo["gender"]
+                        document.getElementById("petage").innerHTML = "<strong>Age: </strong>" + petinfo["age"]
+                        document.getElementById("petbio").innerHTML = "<strong>Bio: </strong>" + petinfo["petbio"]
+                        if (petinfo["imageFileName"] === "") {
+                            document.getElementById("petphoto").src = "Image/icon2.png";
+                        }
+                        else {
+                            document.getElementById("petphoto").src = "Image/" + petinfo["imageFileName"]
+                        }
+                    }
+                },
+                error: function (e) {
+                    alert("boom...");
+                }
+            });
+        }      
+    </script>
 </head>
 
 <body onload="loadData()">
 
-  <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color:#ff6699">
-    <div class="container ">
-      <a class="navbar-brand" href="#" style="font-family:Lobster; font-size:30px;">PuppyLove</a>
-        <ul class="navbar-nav ml-auto" >
-          <li class="nav-item active" >
-            <a class="nav-link border border-secondary rounded" href="#" onclick="LogOff()" style="font-family:Odibee Sans; font-size:30px; background-color:#cc6699">Log Out</a>
-        </ul>
-    </div>
-  </nav>
-
-  <!-- Page Content -->
-  <div class="background"></div>
-  <div class="container">
-    <!-- Heading Row -->
-    <div class="row align-items-center my-5">
-        <div class="col-lg-3">
-            <img class="img-fluid rounded mb-4 mb-lg-0" src="Image/icon2.png" alt="User Photo" width="200" height="200">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color:#ff6699">
+        <div class="container ">
+            <a class="navbar-brand" href="#" style="font-family:Lobster; font-size:30px;">PuppyLove</a>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <p id="username" style="font-family:Odibee Sans; font-size:40px; padding-right:20px"></p>
+                </li>
+                <li class="nav-item active" style="font-family:Odibee Sans; font-size:40px; padding-right:20px">|</li>
+                <li class="nav-item active">
+                    <button class="btn btn-info btn-lg" onclick="LogOff()" style="font-family:Odibee Sans; font-size:25px; padding-right:20px">
+                        <span class="glyphicon glyphicon-log-out" ></span> Log out
+                    </button>
+                </li>
+            </ul>
         </div>
-      <!-- /.col-lg-8 -->
-      <div class="col-lg-9">
-        <h1 id="username" class="font-weight-bold">Sherman</h1>
-        <p id="bio_msg">I love My puppy more than myself!!</p>
-        <a class="btn btn-primary" href="./addPet.html">Add Pet</a> 
-        <a class="btn btn-primary" href="./accountInfo.html">Edit Account Info</a> 
-        <a class="btn btn-primary" href="./profileInfo.html">Edit Profile Info</a> 
-      </div>
-      <!-- /.col-md-4 -->
-    </div>
-    <!-- /.row -->
+    </nav>
 
-    <!-- Call to Action Well -->
-    <div class="card text-white my-5 py-4 text-center" style="background-color:#ff6699">
-      <div class="card-body">
-          <p class="text-white m-0" style="font-size:20px;">Welcome back! Hurry up and book your next appointment for your pet!</p>
-      </div>
-    </div>
-
-    <!-- Content Row -->
-    <div class="row">
-      <div class="col-md-4 mb-5">
-        <div class="card h-100">
-            <div class="card-body">
-                <img src="Image/icon.png" />
-                <h2 class="card-title">Pet Name</h2>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus quam molestias corporis quod, ea minima accusamus.</p>
+    <!-- Page Content -->
+    <div class="background"></div>
+    <div class="container">
+        <!-- Heading Row -->
+        <div class="row align-items-center my-5">
+            <div class="col-lg-3">
+                <img id="userphoto" class="img-fluid rounded mb-4 mb-lg-0" src="" alt="User Photo" width="200" height="200">
             </div>
-          <div class="card-footer">
-              <a href="#" class="btn btn-primary btn-sm">Start!</a>
-          </div>
-        </div>
-      </div>
-      <!-- /.col-md-4 -->
-      <div class="col-md-4 mb-5">
-        <div class="card h-100">
-            <div class="card-body">
-                <img src="Image/icon.png" />
-                <h2 class="card-title">Pet Name</h2>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod tenetur ex natus at dolorem enim! Nesciunt pariatur voluptatem sunt quam eaque, vel, non in id dolore voluptates quos eligendi labore.</p>
+            <!-- /.col-lg-8 -->
+            <div class="col-lg-9">
+                <h1 id="firstLast" class="font-weight-bold">This should be the User full name</h1>
+                <p id="bio_msg" style="font-size:20px">This should be the User's Bio</p>
+                <a class="btn btn-primary" href="./accountInfo.html">Edit Account Info</a>
+                <a class="btn btn-primary" href="./uploadbutton.aspx">Upload a Photo</a>
+                <a class="btn btn-primary" href="./ViewUserAccounts.html" id="btnAccounts">View All Users</a>
             </div>
-          <div class="card-footer">
-            <a href="#" class="btn btn-primary btn-sm">Start!</a>
-          </div>
+            <!-- /.col-md-4 -->
         </div>
-      </div>
-      <!-- /.col-md-4 -->
-      <div class="col-md-4 mb-5">
-        <div class="card h-100">
+        <!-- /.row -->
+        <!-- Call to Action Well -->
+        <div class="card text-white my-5 py-4 text-center" style="background-color:#ff6699">
             <div class="card-body">
-                <img src="Image/icon.png" />
-                <h2 class="card-title">Pet Name</h2>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus quam molestias corporis quod, ea minima accusamus.</p>
+                <p class="text-white m-0" style="font-size:20px;">Welcome back! Hurry and book your next appointment for your pet!</p>
             </div>
-          <div class="card-footer">
-              <a href="#" class="btn btn-primary btn-sm">Start!</a>
-          </div>
         </div>
-      </div>
-      <!-- /.col-md-4 -->
+
+        <!-- Content Row -->
+        <div class="row">
+            <div class="col-md-4 mb-5" id="petcard" style="display:block;">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <img id="petphoto" src="" width="300" height="200" />
+                        <h2 class="card-title" id="petname">Pet Name</h2>
+                        <p class="card-text" id="petbreed" style="font-size:20px;">This should be the pet breed</p>
+                        <p class="card-text" id="petgender" style="font-size:20px;">This should be the pet gender</p>
+                        <p class="card-text" id="petage" style="font-size:20px;">This should be the pet age</p>
+                        <p class="card-text" id="petbio" style="font-size:20px;">This should be the pet bio</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="./profileInfo.html" class="btn btn-primary btn-sm" style="font-size:20px; float:right;">Edit This Pet!</a>
+                        <a href="./matching.html" class="btn btn-primary btn-sm" style="font-size:20px; float:left;">Find a Match!</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1 mb-2" id="blocker"></div>
+            <div class="col-md-4 mb-5" id="addpetcard">
+                <br />
+                <br />
+                <a href="addPet.html">
+                    <img src="Image/addicon.png" width="300" height="300" />
+                </a>
+            </div>
+            <!-- /.col-md-4 -->
+
+        </div>
+        <!-- /.row -->
 
     </div>
-    <!-- /.row -->
-
-  </div>
-  <!-- /.container -->
-
+    <!-- /.container -->
 
 
 </body>
