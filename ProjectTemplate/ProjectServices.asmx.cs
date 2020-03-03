@@ -360,7 +360,7 @@ namespace ProjectTemplate
             //tell our command to replace the @parameters with real values
             //we decode them because they came to us via the web so they were encoded
             //for transmission (funky characters escaped, mostly)
-            sqlCommand.Parameters.AddWithValue("@userValue", HttpUtility.UrlDecode(accID));
+            sqlCommand.Parameters.AddWithValue("@userValue", HttpUtility.UrlDecode(accountId));
 
             //a data adapter acts like a bridge between our command object and 
             //the data we are trying to get back and put in a table object
@@ -505,5 +505,32 @@ namespace ProjectTemplate
                 return new Models.Account[0];
             }
         }
+
+        [WebMethod(EnableSession = true)]
+        public void DeleteAccount(string id)
+        {
+            if (Session["isAdmin"].ToString() == "true")
+            {
+                string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
+                string sqlSelect = "delete from accounts where accountID=@idValue";
+
+                MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+                MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+
+                sqlCommand.Parameters.AddWithValue("@idValue", HttpUtility.UrlDecode(id));
+
+                sqlConnection.Open();
+                try
+                {
+                    sqlCommand.ExecuteNonQuery();
+                }
+                catch (Exception e)
+                {
+
+                }
+                sqlConnection.Close();
+            }
+        }
+
     }
 }

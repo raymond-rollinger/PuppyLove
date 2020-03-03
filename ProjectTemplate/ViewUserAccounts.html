@@ -43,7 +43,6 @@
         }
 
         var accountsArray;
-        var admin = false;
         function LoadAccounts() {
             var webMethod = "ProjectServices.asmx/GetAccounts";
             $.ajax({
@@ -70,47 +69,16 @@
                             return comparison;
                         }
                         accountsArray.sort(compare);
-
-                        admin = false;
                         for (var i = 0; i < accountsArray.length; i++) {
-
                             var acct;
-                            //if they have access to admin-level info (like userid and password) then
-                            //create output that has an edit option
-                            if (accountsArray[i].accountID != null) {
-                                acct = "<tr><th scope = \"row\">" + accountsArray[i].accountID + "</th ><td>" + accountsArray[i].userName +
-                                    "</td><td>" + accountsArray[i].firstName + "</td><td>" + accountsArray[i].lastName + "</td><td style=\"width: 10 %\">" + 
-                                    "<button type=\"button\" class=\"btn btn-primary\">" + "<a href=\"mailto:" + accountsArray[i].email +
-                                    "\" style=\"color: aliceblue\">" + "Send Email" + "</button>" + "</td><td style=\"width: 6 %\">" +
-                                    "<button type=\"button\" class=\"btn btn-info\">" + "Edit" + "</button>" + "</td><td>" +
-                                    "<button type=\"button\" class=\"btn btn-warning\">" + "Delete" + "</button>" + "</td></tr>"
+                            acct = "<tr><th scope = \"row\">" + accountsArray[i].accountID + "</th ><td>" + accountsArray[i].userName +
+                                "</td><td>" + accountsArray[i].firstName + "</td><td>" + accountsArray[i].lastName + "</td><td style=\"width: 10 %\">" + 
+                                "<button type=\"button\" class=\"btn btn-primary\">" + "<a href=\"mailto:" + accountsArray[i].email +
+                                "\" style=\"color: aliceblue\">" + "Send Email" + "</button>" + "</td><td style=\"width: 6 %\">" +
+                                "<button type=\"button\" class=\"btn btn-info\">" + "Edit" + "</button>" + "</td><td>" +
+                                "<button type=\"button\" class=\"btn btn-warning\" onclick='DeleteAccount(" + accountsArray[i].accountID + ")'>" + "Delete" + "</button>" + "</td></tr>"                       
 
-                                /*
-                                    "<div class='accountRow' id='acct" + accountsArray[i].userName + "'>" +
-                                    "<a class='nameTag' href='mailto:" + accountsArray[i].email + "'>" +
-                                    accountsArray[i].firstName + " " + accountsArray[i].lastName +
-                                    "</a> <a href='#' onclick='LoadAccount(" + accountsArray[i].userName + ")' class='optionsTag'>Edit</a></div><hr>" +
-                                    "<a href='#' onclick='DeleteAccount()' class='optionsTag'>Delete</a></div><hr>"
-                                */
-                                admin = true;
-                            }
-                            //if not, then they're not an admin so don't include the edit option
-                            else {
-                                acct = "<tr><th scope = \"row\">" + accountsArray[i].accountID + "</th ><td>" + accountsArray[i].userName +
-                                    "</td><td>" + accountsArray[i].firstName + "</td><td>" + accountsArray[i].lastName + "</td><td style=\"width: 10 %\">" +
-                                    "<button type=\"button\" class=\"btn btn-primary\">" + "<a href=\"mailto:" + accountsArray[i].email +
-                                    "\" style=\"color: aliceblue\">" + "Send Email" + "</button>" + "</td></tr>"
-
-                                  /*
-                                    "<div class='accountRow' id='acct" + accountsArray[i].accountID + "'>" +
-                                    "<a class='nameTag' href='mailto:" + accountsArray[i].email + "'>" +
-                                    accountsArray[i].firstName + " " + accountsArray[i].lastName +
-                                    "</a></div><hr>"
-                                */
-                            }
-                            $("#accountsBox").append(
-                                acct
-                            );
+                            $("#accountsBox").append(acct);
                         }
                     }
                 },
@@ -120,24 +88,29 @@
             });
         }
 
-        var currentAccount;
-        function LoadAccount(id) {
-            currentAccount = null;
-            for (var i = 0; i < accountsArray.length; i++) {
-                if (accountsArray[i].id == id) {
-                    currentAccount = accountsArray[i]
-                }
-            }
-            //if (currentAccount != null) {
-            //    $('#editLogonId').val(currentAccount.userId);
-            //    $('#editLogonPassword').val(currentAccount.password);
-            //    $('#editLogonFName').val(currentAccount.firstName);
-            //    $('#editLogonLName').val(currentAccount.lastName);
-            //    $('#editLogonEmail').val(currentAccount.email);
-            //}
 
+        function DeleteAccount(id) {
+            var webMethod = "ProjectServices.asmx/DeleteAccount";
+            var parameters = "{\"id\":\"" + encodeURI(id) + "\"}";
+            debugger
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    alert("Account Deleted");
+                    location.replace("./ViewUserAccounts.html");
+                },
+                error: function (e) {
+                    alert("boo...");
+                }
+            });
         }
-        
+
+        // This function can be used later, I think to make it work, we just need to change the parameters and add more function in there. 
+        /*
         function EditAccount() {
             var webMethod = "ProjectServices.asmx/UpdateAccount";
             var parameters = "{\"accountID\":\"" + encodeURI(currentAccount.accountID) + "\",\"uid\":\"" + encodeURI($('#editLogonId').val()) + "\",\"password\":\"" + encodeURI($('#editLogonPassword').val()) + "\",\"firstName\":\"" + encodeURI($('#editLogonFName').val()) + "\",\"lastName\":\"" + encodeURI($('#editLogonLName').val()) + "\",\"email\":\"" + encodeURI($('#editLogonEmail').val()) + "\"}";
@@ -157,6 +130,8 @@
                 }
             });
         }
+        */
+
 </script>
 </head>
 <body>
