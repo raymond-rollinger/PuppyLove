@@ -28,14 +28,14 @@ namespace ProjectTemplate
                     if (PetPhotoRadioBtn.Checked)
                     {
                         destinationProfile = puppyLove.UploadPhoto(filename, true);
-                        
+                        StatusLabel.Text = $"Success! {filename} uploaded to {destinationProfile}'s profile.";
                     }
                     else
                     {
                         destinationProfile = puppyLove.UploadPhoto(filename, false);
+                        StatusLabel.Text = $"Success! {filename} uploaded to {destinationProfile}'s profile. You will see the new photo displayed next time you log in.";
                     }
-
-                    StatusLabel.Text = $"Success! {filename} uploaded to {destinationProfile}'s profile.";
+                  
                     //StatusLabel.Text = "Success! First line of text: " + textLines[0];
 
 				}

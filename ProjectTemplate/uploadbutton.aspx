@@ -13,12 +13,13 @@
         <asp:FileUpload ID="Uploader" runat="server" accept="image/*" />
         <asp:Button ID="UploadSubmit" runat="server" OnClick="UploadSubmit_Click" Text="Upload" Height="40px" BackColor="White" BorderStyle="None" ForeColor="Blue" />
         </fieldset>
-        <asp:Label ID="StatusLabel" runat="server" Font-Italic="True"></asp:Label>
         <br />
-        <asp:RadioButton ID="UserPhotoRadioBtn" runat="server" Checked="True" Text="User Photo" GroupName="radioBtnGroup" /><br>
-        <asp:RadioButton ID="PetPhotoRadioBtn" runat="server" Checked="False" Text="Pet Photo" GroupName="radioBtnGroup" /><br>    
+        <asp:Label ID="StatusLabel" runat="server" Font-Italic="True" Text="Who is this photo upload for?"></asp:Label>
         <br />
-       
+        <asp:RadioButton ID="UserPhotoRadioBtn" runat="server" Checked="True" Text="User" GroupName="radioBtnGroup" /><br>
+        <asp:RadioButton ID="PetPhotoRadioBtn" runat="server" Checked="False" Text="Pet" GroupName="radioBtnGroup" /><br>    
+        <br />
+        
         <asp:HyperLink ID="HomePageLink" runat="server" NavigateUrl="./AccountPage.html" BackColor="White" ForeColor="Blue" Target="_parent" Text="Back To Home Page" />
      </form>
 </body>
