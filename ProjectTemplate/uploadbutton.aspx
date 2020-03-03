@@ -15,6 +15,11 @@
         </fieldset>
         <asp:Label ID="StatusLabel" runat="server" Font-Italic="True"></asp:Label>
         <br />
-    </form>
+        <asp:RadioButton ID="UserPhotoRadioBtn" runat="server" Checked="True" Text="User Photo" GroupName="radioBtnGroup" /><br>
+        <asp:RadioButton ID="PetPhotoRadioBtn" runat="server" Checked="False" Text="Pet Photo" GroupName="radioBtnGroup" /><br>    
+        <br />
+       
+        <asp:HyperLink ID="HomePageLink" runat="server" NavigateUrl="./AccountPage.html" BackColor="White" ForeColor="Blue" Target="_parent" Text="Back To Home Page" />
+     </form>
 </body>
 </html>

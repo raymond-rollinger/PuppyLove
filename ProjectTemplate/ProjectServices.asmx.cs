@@ -14,7 +14,6 @@ namespace ProjectTemplate
 	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 	[System.ComponentModel.ToolboxItem(false)]
 	[System.Web.Script.Services.ScriptService]
-
 	public class ProjectServices : System.Web.Services.WebService
 	{
 		////////////////////////////////////////////////////////////////////////
@@ -38,16 +37,13 @@ namespace ProjectTemplate
         public string LogOn(string uName, string pass)
         {
             //we return this flag to tell them if they logged in or not
-            
-            
-            List<string> accountData = new List<string>();
             string account = ""; 
             //our connection string comes from our web.config file like we talked about earlier
             string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
             //here's our query.  A basic select with nothing fancy.  Note the parameters that begin with @
             //NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
 
-            string sqlSelect = "SELECT accountID, userName, firstName, lastName, email, bio, city FROM accounts WHERE userName=@userValue and password=@passValue";
+            string sqlSelect = "SELECT accountID, userName, firstName, lastName, email, bio, isAdmin, city, imageFileName FROM accounts WHERE userName=@userValue and password=@passValue";
 
 
             //set up our connection object to be ready to use our connection string
@@ -81,14 +77,18 @@ namespace ProjectTemplate
                 Session["lastName"] = sqlDt.Rows[0]["lastName"];
                 Session["email"] = sqlDt.Rows[0]["email"];
                 Session["bio"] = sqlDt.Rows[0]["bio"];
+                Session["isAdmin"] = sqlDt.Rows[0]["isAdmin"];
                 Session["city"] = sqlDt.Rows[0]["city"];
+                Session["imageFileName"] = sqlDt.Rows[0]["imageFileName"];
                 account = "{" + "\"userName\"" + ":" + "\"" + Session["userName"].ToString() + "\"" + "," 
-                    + "\"accountID\"" + ":" + "\"" + Session["accountID"].ToString() + "\"" + "," 
+                    + "\"accountID\"" + ":" + "\"" + Session["accountID"] + "\"" + "," 
                     + "\"firstName\"" + ":" + "\"" + Session["firstName"].ToString() + "\"" + "," 
                     + "\"lastName\"" + ":" + "\"" + Session["lastName"].ToString() + "\"" + "," 
                     + "\"email\"" + ":" + "\"" + Session["email"].ToString() + "\"" + ","
                     + "\"bio\"" + ":" + "\"" + Session["bio"].ToString() + "\"" + ","
-                    + "\"city\"" + ":" + "\"" + Session["city"].ToString() + "\"" + "}";
+                    + "\"isAdmin\"" + ":" + "\"" + Session["isAdmin"] + "\"" + ","
+                    + "\"city\"" + ":" + "\"" + Session["city"].ToString() + "\"" + ","
+                    +"\"imageFileName\"" + ":" + "\"" + Session["imageFileName"].ToString() + "\"" + "}";
                 
             }
             //return the result!
@@ -233,11 +233,58 @@ namespace ProjectTemplate
             }
             catch (Exception)
             {
+                
             }
             sqlConnection.Close();
         }
 
         [WebMethod(EnableSession = true)]
+        public string UploadPhoto(string filename, bool pet)
+        {
+            string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
+            string sqlEditProfile;
+            string sqlGetProfileFirstName;
+            string name = "";
+
+            if (pet)
+            {
+                sqlEditProfile = "UPDATE profiles SET imageFileName=@filename WHERE accountID=@userIdValue";
+                sqlGetProfileFirstName = "SELECT petName FROM profiles WHERE accountID=@userIdValue";
+            }
+
+            else
+            {
+                sqlEditProfile = "UPDATE accounts SET imageFileName=@filename WHERE accountID=@userIdValue";
+                sqlGetProfileFirstName = "SELECT firstName FROM accounts WHERE accountID=@userIdValue";
+            }
+
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+            MySqlCommand sqlCommand1 = new MySqlCommand(sqlEditProfile, sqlConnection);
+            MySqlCommand sqlCommand2 = new MySqlCommand(sqlGetProfileFirstName, sqlConnection);
+            sqlCommand1.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(Session["accountID"].ToString()));
+            sqlCommand1.Parameters.AddWithValue("@filename", HttpUtility.UrlDecode(filename));
+            sqlCommand2.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(Session["accountID"].ToString()));
+            sqlConnection.Open();
+            try
+            {
+                int accountID = Convert.ToInt32(sqlCommand1.ExecuteScalar());
+                MySqlDataReader dr = sqlCommand2.ExecuteReader();
+                if(dr.HasRows)
+                {
+                    dr.Read();
+                    name = dr.GetString(0);
+                }
+                dr.Close();
+            }
+            catch (Exception)
+            {
+            }
+            sqlConnection.Close();
+
+            return name;
+            
+        }
+
         public void AddPet(string petName, string breed, string gender, string age, string bio)
         {
             //our connection string comes from our web.config file like we talked about earlier
@@ -294,6 +341,7 @@ namespace ProjectTemplate
         {
             //we return this flag to tell them if they logged in or not
             string petinfo = "";
+            
             //our connection string comes from our web.config file like we talked about earlier
             string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
             //here's our query.  A basic select with nothing fancy.  Note the parameters that begin with @
@@ -313,7 +361,6 @@ namespace ProjectTemplate
             //we decode them because they came to us via the web so they were encoded
             //for transmission (funky characters escaped, mostly)
             sqlCommand.Parameters.AddWithValue("@userValue", HttpUtility.UrlDecode(accID));
-
 
             //a data adapter acts like a bridge between our command object and 
             //the data we are trying to get back and put in a table object
@@ -350,5 +397,55 @@ namespace ProjectTemplate
             return petinfo;
         }
 
-	}
+        [WebMethod(EnableSession = true)]
+        public Models.Account[] GetAccounts()
+        {
+            //check out the return type.  It's an array of Account objects.  You can look at our custom Account class in this solution to see that it's 
+            //just a container for public class-level variables.  It's a simple container that asp.net will have no trouble converting into json.  When we return
+            //sets of information, it's a good idea to create a custom container class to represent instances (or rows) of that information, and then return an array of those objects.  
+            //Keeps everything simple.
+
+            //WE ONLY SHARE ACCOUNTS WITH LOGGED IN USERS!
+            if (Session["accountID"] != null)
+            {
+                DataTable sqlDt = new DataTable("accounts");
+
+                string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
+                string sqlSelect = "select accountID, userName, firstName, lastName, email, password from accounts order by lastName";
+
+                MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+                MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+
+                //gonna use this to fill a data table
+                MySqlDataAdapter sqlDa = new MySqlDataAdapter(sqlCommand);
+                //filling the data table
+                sqlDa.Fill(sqlDt);
+
+                //loop through each row in the dataset, creating instances
+                //of our container class Account.  Fill each acciount with
+                //data from the rows, then dump them in a list.
+                List<Models.Account> accounts = new List<Models.Account>();
+                for (int i = 0; i < sqlDt.Rows.Count; i++)
+                {
+                    //only share user id and pass info with admins!
+                        accounts.Add(new Models.Account
+                        {
+                            accountID = Convert.ToInt32(sqlDt.Rows[i]["accountID"]),
+                            userName = sqlDt.Rows[i]["userName"].ToString(),
+                            password = sqlDt.Rows[i]["password"].ToString(),
+                            firstName = sqlDt.Rows[i]["firstName"].ToString(),
+                            lastName = sqlDt.Rows[i]["lastName"].ToString(),
+                            email = sqlDt.Rows[i]["email"].ToString()
+                        });
+                }
+                //convert the list of accounts to an array and return!
+                return accounts.ToArray();
+            }
+            else
+            {
+                //if they're not logged in, return an empty array
+                return new Models.Account[0];
+            }
+        }
+    }
 }

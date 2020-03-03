@@ -12,50 +12,13 @@
     <link rel="stylesheet" href="CSS/LoadAccounts.css">
     <style>
 
-        body {
-            padding-top: 56px;
+        body{
+            
         }
 
-        .background {
-            background-image: url('Image/index_back.jpeg');
-            position: absolute;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: cover;
-            background-position: center;
-            z-index: -1;
-            width: 100%;
-            height: 100%;
-            opacity: 0.30;
-        }
     </style>
     <script type="text/javascript">
-        showPanel('accountsPanel');
-        var contentPanels = ['logonPanel', 'newAccountPanel', 'accountsPanel', 'editAccountPanel', 'requestsPanel'];
-        function clearData() {
-            $("#accountsBox").empty();
-            $("#requestsBox").empty();
-            clearNewAccount();
-            clearLogon();
-            clearEditAccount();
-        }
-        function showPanel(panelId) {
-            clearData();
-            for (var i = 0; i < contentPanels.length; i++) {
-                if (panelId == contentPanels[i]) {
-                    $("#" + contentPanels[i]).css("visibility", "visible");
-                }
-                else {
-                    $("#" + contentPanels[i]).css("visibility", "hidden");
-                }
-            }
-        }
-
-        jQuery(function () {
-            showPanel('accountsPanel');
             LoadAccounts();
-
-        });
 
         function LogOff() {
 
@@ -67,8 +30,6 @@
                 dataType: "json",
                 success: function (msg) {
                     if (msg.d) {
-                        HideMenu();
-
                         alert("Session ended.");
                         location.replace("./index.html");
                     }
@@ -81,11 +42,8 @@
             });
         }
 
-            var accountsArray;
-            var admin = false;
-
-
-        var accountWindowShowing = false;
+        var accountsArray;
+        var admin = false;
         function LoadAccounts() {
             var webMethod = "ProjectServices.asmx/GetAccounts";
             $.ajax({
@@ -94,173 +52,67 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (msg) {
+                    console.log(msg);
                     if (msg.d.length > 0) {
-                        //let's put our accounts that we get from the
-                        //server into our accountsArray variable
-                        //so we can use them in other functions as well
+                        console.log(msg.d);
                         accountsArray = msg.d;
-                        //this clears out the div that will hold our account info
                         $("#accountsBox").empty();
-                        //again, we assume we're not an admin unless we see data from the server
-                        //that we know only admins can see
+                        // sort the id
+                        function compare(a, b) {
+                            const IDA = a.accountID;
+                            const IDB = b.accountID;
+                            let comparison = 0;
+                            if (IDA > IDB) {
+                                comparison = 1;
+                            } else if (IDA < IDB) {
+                                comparison = -1;
+                            }
+                            return comparison;
+                        }
+                        accountsArray.sort(compare);
+
                         admin = false;
                         for (var i = 0; i < accountsArray.length; i++) {
-                            //we grab on to a specific html element in jQuery
-                            //by using a  # followed by that element's id.
+
                             var acct;
                             //if they have access to admin-level info (like userid and password) then
                             //create output that has an edit option
-                            if (accountsArray[i].userId != null) {
-                                acct = "<div class='accountRow' id='acct" + accountsArray[i].id + "'>" +
+                            if (accountsArray[i].accountID != null) {
+                                acct = "<tr><th scope = \"row\">" + accountsArray[i].accountID + "</th ><td>" + accountsArray[i].userName +
+                                    "</td><td>" + accountsArray[i].firstName + "</td><td>" + accountsArray[i].lastName + "</td><td style=\"width: 10 %\">" + 
+                                    "<button type=\"button\" class=\"btn btn-primary\">" + "<a href=\"mailto:" + accountsArray[i].email +
+                                    "\" style=\"color: aliceblue\">" + "Send Email" + "</button>" + "</td><td style=\"width: 6 %\">" +
+                                    "<button type=\"button\" class=\"btn btn-info\">" + "Edit" + "</button>" + "</td><td>" +
+                                    "<button type=\"button\" class=\"btn btn-warning\">" + "Delete" + "</button>" + "</td></tr>"
+
+                                /*
+                                    "<div class='accountRow' id='acct" + accountsArray[i].userName + "'>" +
                                     "<a class='nameTag' href='mailto:" + accountsArray[i].email + "'>" +
                                     accountsArray[i].firstName + " " + accountsArray[i].lastName +
-                                    "</a> <a href='#' onclick='LoadAccount(" + accountsArray[i].id + ")' class='optionsTag'>edit</a></div><hr>"
+                                    "</a> <a href='#' onclick='LoadAccount(" + accountsArray[i].userName + ")' class='optionsTag'>Edit</a></div><hr>" +
+                                    "<a href='#' onclick='DeleteAccount()' class='optionsTag'>Delete</a></div><hr>"
+                                */
                                 admin = true;
                             }
                             //if not, then they're not an admin so don't include the edit option
                             else {
-                                acct = "<div class='accountRow' id='acct" + accountsArray[i].id + "'>" +
+                                acct = "<tr><th scope = \"row\">" + accountsArray[i].accountID + "</th ><td>" + accountsArray[i].userName +
+                                    "</td><td>" + accountsArray[i].firstName + "</td><td>" + accountsArray[i].lastName + "</td><td style=\"width: 10 %\">" +
+                                    "<button type=\"button\" class=\"btn btn-primary\">" + "<a href=\"mailto:" + accountsArray[i].email +
+                                    "\" style=\"color: aliceblue\">" + "Send Email" + "</button>" + "</td></tr>"
+
+                                  /*
+                                    "<div class='accountRow' id='acct" + accountsArray[i].accountID + "'>" +
                                     "<a class='nameTag' href='mailto:" + accountsArray[i].email + "'>" +
                                     accountsArray[i].firstName + " " + accountsArray[i].lastName +
                                     "</a></div><hr>"
+                                */
                             }
                             $("#accountsBox").append(
-                                //anything we throw at our panel in the form of text
-                                //will be added to the contents of that panel.  Here
-                                //we're putting together a div that holds info on the
-                                //account as well as an edit link if the user is an admin
                                 acct
                             );
                         }
                     }
-                    //we're showing the account window, so let's track that...
-                    accountWindowShowing = true;
-                    //...because the ShowMenu function behaves differently depending on
-                    //if the account window is showing or not
-                    ShowMenu();
-                },
-                error: function (e) {
-                    alert("boo...");
-                }
-            });
-        }
-                    //and here's a function that adjusts the menu options if you're an admin or a user
-        //and if you're looking at accounts or requests
-        function ShowMenu() {
-
-            $("#menu").css("visibility", "visible");
-            if (admin) {
-                if (accountWindowShowing) {
-                    $("#adminLink").text("requests");
-                }
-                else {
-                    $("#adminLink").text("accounts");
-                }
-            }
-        }
-
-        function HideMenu() {
-
-            $("#menu").css("visibility", "hidden");
-            $("#adminLink").text("");
-        }
-
-        //when an admin clicks either accounts or requests,
-        //they're shown teh appropriate screen-->
-        function adminClick() {
-            if (accountWindowShowing) {
-                //show requests
-                showPanel('requestsPanel');
-                accountWindowShowing = false;
-                LoadRequests()
-                ShowMenu();
-            }
-            else {
-                showPanel('accountsPanel');
-                LoadAccounts();
-                ShowMenu();
-            }
-        }
-
-        function clearNewAccount() {
-            $('#newLogonId').val("");
-            $('#newLogonPassword').val("");
-            $('#newLogonFName').val("");
-            $('#newLogonLName').val("");
-            $('#newLogonEmail').val("");
-        }
-
-        function clearEditAccount() {
-            $('#editLogonId').val("");
-            $('#editLogonPassword').val("");
-            $('#editLogonFName').val("");
-            $('#editLogonLName').val("");
-            $('#editLogonEmail').val("");
-        }
-
-        function approveAccount(id) {
-            var webMethod = "ProjectServices.asmx/ActivateAccount";
-            var parameters = "{\"id\":\"" + encodeURI(id) + "\"}";
-
-            $.ajax({
-                type: "POST",
-                url: webMethod,
-                data: parameters,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (msg) {
-                    showPanel('requestsPanel');
-                    LoadRequests();
-                },
-                error: function (e) {
-                    alert("boo...");
-                }
-            });
-        }
-
-        function rejectAccount(id) {
-            var webMethod = "ProjectServices.asmx/RejectAccount";
-            var parameters = "{\"id\":\"" + encodeURI(id) + "\"}";
-
-            $.ajax({
-                type: "POST",
-                url: webMethod,
-                data: parameters,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (msg) {
-                    showPanel('requestsPanel');
-                    LoadRequests();
-                },
-                error: function (e) {
-                    alert("boo...");
-                }
-            });
-        }
-
-        function LoadRequests() {
-            var webMethod = "ProjectServices.asmx/GetAccountRequests";
-            $.ajax({
-                type: "POST",
-                url: webMethod,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (msg) {
-                    if (msg.d.length > 0) {
-                        $("#requestsBox").empty();
-                        admin = false;
-                        for (var i = 0; i < msg.d.length; i++) {
-                            req = "<div class='accountRow' id='acctR" + msg.d[i].id + "'>" +
-                                "<span class='nameTag'>" +
-                                msg.d[i].firstName + " " + msg.d[i].lastName +
-                                "</span> <span class='optionsTag'><a href='#' onclick='approveAccount(" + msg.d[i].id + ")'>yes</a> / " +
-                                "<a href='#' onclick='rejectAccount(" + msg.d[i].id + ")'>no</a></span>" +
-                                "<div style='font-size: smaller'>" + msg.d[i].email + "</div></div > <hr>";
-                            $("#requestsBox").append(req);
-                        }
-                    }
-                    accountWindowShowing = false;
-                    ShowMenu();
                 },
                 error: function (e) {
                     alert("boo...");
@@ -270,42 +122,22 @@
 
         var currentAccount;
         function LoadAccount(id) {
-            showPanel('editAccountPanel');
             currentAccount = null;
             for (var i = 0; i < accountsArray.length; i++) {
                 if (accountsArray[i].id == id) {
                     currentAccount = accountsArray[i]
                 }
             }
-            if (currentAccount != null) {
-                $('#editLogonId').val(currentAccount.userId);
-                $('#editLogonPassword').val(currentAccount.password);
-                $('#editLogonFName').val(currentAccount.firstName);
-                $('#editLogonLName').val(currentAccount.lastName);
-                $('#editLogonEmail').val(currentAccount.email);
-            }
+            //if (currentAccount != null) {
+            //    $('#editLogonId').val(currentAccount.userId);
+            //    $('#editLogonPassword').val(currentAccount.password);
+            //    $('#editLogonFName').val(currentAccount.firstName);
+            //    $('#editLogonLName').val(currentAccount.lastName);
+            //    $('#editLogonEmail').val(currentAccount.email);
+            //}
+
         }
-
-        function DeactivateAccount() {
-            var webMethod = "ProjectServices.asmx/DeleteAccount";
-            var parameters = "{\"id\":\"" + encodeURI(currentAccount.id) + "\"}";
-
-            $.ajax({
-                type: "POST",
-                url: webMethod,
-                data: parameters,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (msg) {
-                    showPanel('accountsPanel');
-                    LoadAccounts();
-                },
-                error: function (e) {
-                    alert("boo...");
-                }
-            });
-        }
-
+        
         function EditAccount() {
             var webMethod = "ProjectServices.asmx/UpdateAccount";
             var parameters = "{\"accountID\":\"" + encodeURI(currentAccount.accountID) + "\",\"uid\":\"" + encodeURI($('#editLogonId').val()) + "\",\"password\":\"" + encodeURI($('#editLogonPassword').val()) + "\",\"firstName\":\"" + encodeURI($('#editLogonFName').val()) + "\",\"lastName\":\"" + encodeURI($('#editLogonLName').val()) + "\",\"email\":\"" + encodeURI($('#editLogonEmail').val()) + "\"}";
@@ -324,7 +156,8 @@
                     alert("boo...");
                 }
             });
-        }</script>
+        }
+</script>
 </head>
 <body>
     <!-- Navigation -->
@@ -338,76 +171,31 @@
             </ul>
         </div>
     </nav>
-    <div class="background"></div>
-    <div class="titleContainer">
-        <span>Account!</span>
-        <div id="menu" class="menu">
-            <a href="#" id="adminLink" onclick="adminClick()"></a>
-        </div>
-    </div>
+    <table class="table table-hover table-striped" style="position:relative; width:70%; margin:auto; margin-top:100px">
+        <thead>
+            <tr>
+                <th scope="col" >Account ID</th>
+                <th scope="col">User Name</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col" style="width:150px">Contact</th>
+                <th scope="col" style="width:100px">Edit User</th>
+                <th scope="col" style="width:120px">Delete User</th>
+            </tr>
+        </thead>
+        <tbody id="accountsBox">
+
+        </tbody>
+    </table>
+    <!--
     <div class="container">
-
-        <div><a href="#" onclick="showPanel('newAccountPanel')" class="tinyLink">New Requests</a></div>
-        <hr />
-        <div>
-            ID: <input type="text" id="logonId" />
-        </div>
-        <div>
-            Pwd: <input type="password" id="logonPassword" />
-        </div>
-        <hr />
-        <div>
-            <button type="submit">Go!</button>
-        </div>
-
-        <div id="accountsPanel" class="contentPanel">
-            <div class="left">Users</div>
-            <div class="left" style="font-size:smaller">click a name to send an email</div>
+        <div id="accountsPanel">
+            <div class="center">Users</div>
+            <div class="left">click a name to send an email</div>
             <hr />
-            <div class="accountsBox" id="accountsBox">
-
-
-            </div>
-        </div>
-
-        <div id="requestsPanel" class="contentPanel">
-            <div class="left">Account requests</div>
-            <hr />
-            <div class="accountsBox" id="requestsBox">
-
-
-            </div>
-        </div>
-
-        <div id="editAccountPanel" class="contentPanel newAccountPanel">
-            <div class="newAccountBox">
-                <form onsubmit="EditAccount(); return false;">
-                    <div class="left">Edit Account</div>
-                    <div><a href="#" onclick="DeactivateAccount()" class="tinyLink">...or deactivate</a></div>
-                    <hr />
-                    <div>
-                        ID: <input type="text" id="editLogonId" />
-                    </div>
-                    <div>
-                        Pwd: <input type="password" id="editLogonPassword" />
-                    </div>
-                    <div>
-                        First: <input type="text" id="editLogonFName" />
-                    </div>
-                    <div>
-                        Last: <input type="text" id="editLogonLName" />
-                    </div>
-                    <div>
-                        Email: <input type="text" id="editLogonEmail" />
-                    </div>
-                    <hr />
-                    <div>
-                        <button type="submit">Save</button>
-                    </div>
-                </form>
-
-            </div>
+            <div class="accountsBox" id="accountsBox"></div>
         </div>
     </div>
+        -->
 </body>
 </html>
