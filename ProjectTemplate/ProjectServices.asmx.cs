@@ -10,34 +10,33 @@ using System.Data;
 
 namespace ProjectTemplate
 {
-	[WebService(Namespace = "http://tempuri.org/")]
-	[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-	[System.ComponentModel.ToolboxItem(false)]
-	[System.Web.Script.Services.ScriptService]
-	public class ProjectServices : System.Web.Services.WebService
-	{
-		////////////////////////////////////////////////////////////////////////
-		///replace the values of these variables with your database credentials
-		////////////////////////////////////////////////////////////////////////
-		private string dbID = "ciscapstoners";
-		private string dbPass = "!!Ciscapstoners";
-		private string dbName = "ciscapstoners";
+    [WebService(Namespace = "http://tempuri.org/")]
+    [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+    [System.ComponentModel.ToolboxItem(false)]
+    [System.Web.Script.Services.ScriptService]
+    public class ProjectServices : System.Web.Services.WebService
+    {
+        ////////////////////////////////////////////////////////////////////////
+        ///replace the values of these variables with your database credentials
+        ////////////////////////////////////////////////////////////////////////
+        private string dbID = "ciscapstoners";
+        private string dbPass = "!!Ciscapstoners";
+        private string dbName = "ciscapstoners";
+        ////////////////////////////////////////////////////////////////////////
 
-        public string tmpId = "";
-		////////////////////////////////////////////////////////////////////////
-		
-		////////////////////////////////////////////////////////////////////////
-		///call this method anywhere that you need the connection string!
-		////////////////////////////////////////////////////////////////////////
-		private string getConString() {
-			return "SERVER=107.180.1.16; PORT=3306; DATABASE=" + dbName+"; UID=" + dbID + "; PASSWORD=" + dbPass;
-		}
+        ////////////////////////////////////////////////////////////////////////
+        ///call this method anywhere that you need the connection string!
+        ////////////////////////////////////////////////////////////////////////
+        private string getConString()
+        {
+            return "SERVER=107.180.1.16; PORT=3306; DATABASE=" + dbName + "; UID=" + dbID + "; PASSWORD=" + dbPass;
+        }
 
         [WebMethod(EnableSession = true)] //NOTICE: gotta enable session on each individual method
         public string LogOn(string uName, string pass)
         {
             //we return this flag to tell them if they logged in or not
-            string account = ""; 
+            string account = "";
             //our connection string comes from our web.config file like we talked about earlier
             string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
             //here's our query.  A basic select with nothing fancy.  Note the parameters that begin with @
@@ -80,16 +79,18 @@ namespace ProjectTemplate
                 Session["isAdmin"] = sqlDt.Rows[0]["isAdmin"];
                 Session["city"] = sqlDt.Rows[0]["city"];
                 Session["imageFileName"] = sqlDt.Rows[0]["imageFileName"];
-                account = "{" + "\"userName\"" + ":" + "\"" + Session["userName"].ToString() + "\"" + "," 
-                    + "\"accountID\"" + ":" + "\"" + Session["accountID"] + "\"" + "," 
-                    + "\"firstName\"" + ":" + "\"" + Session["firstName"].ToString() + "\"" + "," 
-                    + "\"lastName\"" + ":" + "\"" + Session["lastName"].ToString() + "\"" + "," 
+                // for later use
+                Session["randomNumber"] = -1;
+                account = "{" + "\"userName\"" + ":" + "\"" + Session["userName"].ToString() + "\"" + ","
+                    + "\"accountID\"" + ":" + "\"" + Session["accountID"] + "\"" + ","
+                    + "\"firstName\"" + ":" + "\"" + Session["firstName"].ToString() + "\"" + ","
+                    + "\"lastName\"" + ":" + "\"" + Session["lastName"].ToString() + "\"" + ","
                     + "\"email\"" + ":" + "\"" + Session["email"].ToString() + "\"" + ","
                     + "\"bio\"" + ":" + "\"" + Session["bio"].ToString() + "\"" + ","
                     + "\"isAdmin\"" + ":" + "\"" + Session["isAdmin"] + "\"" + ","
                     + "\"city\"" + ":" + "\"" + Session["city"].ToString() + "\"" + ","
-                    +"\"imageFileName\"" + ":" + "\"" + Session["imageFileName"].ToString() + "\"" + "}";
-                
+                    + "\"imageFileName\"" + ":" + "\"" + Session["imageFileName"].ToString() + "\"" + "}";
+
             }
             //return the result!
             return account;
@@ -131,49 +132,49 @@ namespace ProjectTemplate
         }
 
         [WebMethod(EnableSession = true)]
-		public bool LogOff()
-		{
-			//if they log off, then we remove the session.  That way, if they access
-			//again later they have to log back on in order for their ID to be back
-			//in the session!
-			Session.Abandon();
+        public bool LogOff()
+        {
+            //if they log off, then we remove the session.  That way, if they access
+            //again later they have to log back on in order for their ID to be back
+            //in the session!
+            Session.Abandon();
             return true;
 
-		}
+        }
 
-		/////////////////////////////////////////////////////////////////////////
-		//don't forget to include this decoration above each method that you want
-		//to be exposed as a web service!
-		[WebMethod(EnableSession = true)]
-		/////////////////////////////////////////////////////////////////////////
-		public string TestConnection()
-		{
-			try
-			{
-				string testQuery = "select * from accounts";
+        /////////////////////////////////////////////////////////////////////////
+        //don't forget to include this decoration above each method that you want
+        //to be exposed as a web service!
+        [WebMethod(EnableSession = true)]
+        /////////////////////////////////////////////////////////////////////////
+        public string TestConnection()
+        {
+            try
+            {
+                string testQuery = "select * from accounts";
 
-				////////////////////////////////////////////////////////////////////////
-				///here's an example of using the getConString method!
-				////////////////////////////////////////////////////////////////////////
-				MySqlConnection con = new MySqlConnection(getConString());
-				////////////////////////////////////////////////////////////////////////
+                ////////////////////////////////////////////////////////////////////////
+                ///here's an example of using the getConString method!
+                ////////////////////////////////////////////////////////////////////////
+                MySqlConnection con = new MySqlConnection(getConString());
+                ////////////////////////////////////////////////////////////////////////
 
-				MySqlCommand cmd = new MySqlCommand(testQuery, con);
-				MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
-				DataTable table = new DataTable();
-				adapter.Fill(table);
-				return "Success!";
-			}
-			catch (Exception e)
-			{
-				return "Something went wrong, please check your credentials and db name and try again.  Error: "+e.Message;
-			}
-		}
+                MySqlCommand cmd = new MySqlCommand(testQuery, con);
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                DataTable table = new DataTable();
+                adapter.Fill(table);
+                return "Success!";
+            }
+            catch (Exception e)
+            {
+                return "Something went wrong, please check your credentials and db name and try again.  Error: " + e.Message;
+            }
+        }
 
         [WebMethod(EnableSession = true)] //NOTICE: gotta enable session on each individual method
         public void AccountInfo(string bio, string city)
         {
-            
+
             //our connection string comes from our web.config file like we talked about earlier
             string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
             //NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
@@ -187,7 +188,7 @@ namespace ProjectTemplate
             //tell our command to replace the @parameters with real values
             //we decode them because they came to us via the web so they were encoded
             //for transmission (funky characters escaped, mostly)
-			sqlCommand.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(Session["accountID"].ToString()));
+            sqlCommand.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(Session["accountID"].ToString()));
             sqlCommand.Parameters.AddWithValue("@bioValue", HttpUtility.UrlDecode(bio));
             sqlCommand.Parameters.AddWithValue("@cityValue", HttpUtility.UrlDecode(city));
             sqlConnection.Open();
@@ -233,7 +234,7 @@ namespace ProjectTemplate
             }
             catch (Exception)
             {
-                
+
             }
             sqlConnection.Close();
         }
@@ -269,7 +270,7 @@ namespace ProjectTemplate
             {
                 int accountID = Convert.ToInt32(sqlCommand1.ExecuteScalar());
                 MySqlDataReader dr = sqlCommand2.ExecuteReader();
-                if(dr.HasRows)
+                if (dr.HasRows)
                 {
                     dr.Read();
                     name = dr.GetString(0);
@@ -282,7 +283,7 @@ namespace ProjectTemplate
             sqlConnection.Close();
 
             return name;
-            
+
         }
 
         [WebMethod(EnableSession = true)]
@@ -328,73 +329,88 @@ namespace ProjectTemplate
             sqlConnection.Close();
         }
 
-            public string RandomId() {
-
-            Random rnd = new Random();
-            int rndNum = rnd.Next(1, 11);  // chooses a number between 1 and 10
-            tmpId = rndNum.ToString();
-
-            return tmpId;
-        }
-
-        [WebMethod(EnableSession = true)] //NOTICE: gotta enable session on each individual method
-        public string Randompet(string accountId)
+        public int accountNumber()
         {
             //we return this flag to tell them if they logged in or not
-            string petinfo = "";
-            
+            int accountNumber;
             //our connection string comes from our web.config file like we talked about earlier
             string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
             //here's our query.  A basic select with nothing fancy.  Note the parameters that begin with @
             //NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
 
-            accountId = RandomId();
-
-            string sqlSelect = "SELECT profileid, petName, accountid, breed, gender, age, bio, imageFileName FROM profiles WHERE accountid=@userValue";
-
-
-            //set up our connection object to be ready to use our connection string
+            string sqlSelect = "SELECT MAX(accountID) FROM accounts";
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
-            //set up our command object to use our connection, and our query
             MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
-
-            //tell our command to replace the @parameters with real values
-            //we decode them because they came to us via the web so they were encoded
-            //for transmission (funky characters escaped, mostly)
-            sqlCommand.Parameters.AddWithValue("@userValue", HttpUtility.UrlDecode(accountId));
-
-            //a data adapter acts like a bridge between our command object and 
-            //the data we are trying to get back and put in a table object
             MySqlDataAdapter sqlDa = new MySqlDataAdapter(sqlCommand);
-            //here's the table we want to fill with the results from our query
             DataTable sqlDt = new DataTable();
-            //here we go filling it!
             sqlDa.Fill(sqlDt);
-            //check to see if any rows were returned.  If they were, it means it's 
-            //a legit account
-            if (sqlDt.Rows.Count > 0)
+            accountNumber = Int32.Parse(sqlDt.Rows[0]["MAX(accountID)"].ToString());
+            return accountNumber;
+        }
+
+        public string RandomId(string id)
+        {
+            int tmpId = 0;
+            Random rnd = new Random();
+            // chooses a number between 1 and 10
+            bool stopSign = true;
+            int maxAccountID = accountNumber();
+            while (stopSign)
             {
-                //if we found an account, store the id and admin status in the session
-                //so we can check those values later on other method calls to see if they 
-                //are 1) logged in at all, and 2) and admin or not
-                Session["profileid"] = sqlDt.Rows[0]["profileid"];
-                Session["petName"] = sqlDt.Rows[0]["petName"];
-                Session["breed"] = sqlDt.Rows[0]["breed"];
-                Session["gender"] = sqlDt.Rows[0]["gender"];
-                Session["age"] = sqlDt.Rows[0]["age"];
-                Session["petbio"] = sqlDt.Rows[0]["bio"];
-                Session["imageFileName"] = sqlDt.Rows[0]["imageFileName"];
-                petinfo = "{" + "\"profileid\"" + ":" + "\"" + Session["profileid"].ToString() + "\"" + ","
-                    + "\"petName\"" + ":" + "\"" + Session["petName"].ToString() + "\"" + ","
-                    + "\"breed\"" + ":" + "\"" + Session["breed"].ToString() + "\"" + ","
-                    + "\"gender\"" + ":" + "\"" + Session["gender"].ToString() + "\"" + ","
-                    + "\"age\"" + ":" + "\"" + Session["age"].ToString() + "\"" + ","
-                    + "\"petbio\"" + ":" + "\"" + Session["petbio"].ToString() + "\"" + ","
-                    + "\"imageFileName\"" + ":" + "\"" + Session["imageFileName"].ToString() + "\"" + "}";
+                tmpId = rnd.Next(1, maxAccountID);
 
+                if (Int32.Parse(Session["randomNumber"].ToString()) == tmpId || tmpId == Int32.Parse(id))
+                {
+                    continue;
+                }
+                else if (Int32.Parse(Session["randomNumber"].ToString()) != tmpId)
+                {
+                    Session["randomNumber"] = tmpId.ToString();
+                    stopSign = false;
+                }
             }
-            //return the result!
+            return tmpId.ToString();
+        }
 
+        [WebMethod(EnableSession = true)] //NOTICE: gotta enable session on each individual method
+        public string Randompet(string accountId)
+        {
+            string petinfo = "";
+            bool stopSign = true;
+            string MatchedAccountId;
+
+            while (stopSign)
+            {
+
+                try
+                {
+                    string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
+                    MatchedAccountId = RandomId(accountId);
+                    string sqlSelect = "SELECT profileid, petName, p.accountId, breed, gender, age, p.bio, p.imageFileName, email FROM profiles p, accounts a WHERE p.accountId = a.accountId and p.accountId = @userValue";
+                    MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+                    MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+                    sqlCommand.Parameters.AddWithValue("@userValue", HttpUtility.UrlDecode(MatchedAccountId));
+                    MySqlDataAdapter sqlDa = new MySqlDataAdapter(sqlCommand);
+                    DataTable sqlDt = new DataTable();
+                    sqlDa.Fill(sqlDt);
+                    if (sqlDt.Rows.Count > 0)
+                    {
+                        stopSign = false;
+                        petinfo = "{" + "\"profileid\"" + ":" + "\"" + sqlDt.Rows[0]["profileid"] + "\"" + ","
+                        + "\"email\"" + ":" + "\"" + sqlDt.Rows[0]["email"] + "\"" + ","
+                        + "\"petName\"" + ":" + "\"" + sqlDt.Rows[0]["petName"] + "\"" + ","
+                        + "\"breed\"" + ":" + "\"" + sqlDt.Rows[0]["breed"] + "\"" + ","
+                        + "\"gender\"" + ":" + "\"" + sqlDt.Rows[0]["gender"] + "\"" + ","
+                        + "\"age\"" + ":" + "\"" + sqlDt.Rows[0]["age"] + "\"" + ","
+                        + "\"petbio\"" + ":" + "\"" + sqlDt.Rows[0]["bio"] + "\"" + ","
+                        + "\"imageFileName\"" + ":" + "\"" + sqlDt.Rows[0]["imageFileName"] + "\"" + "}";
+                    }
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
             return petinfo;
         }
 
@@ -487,15 +503,15 @@ namespace ProjectTemplate
                 for (int i = 0; i < sqlDt.Rows.Count; i++)
                 {
                     //only share user id and pass info with admins!
-                        accounts.Add(new Models.Account
-                        {
-                            accountID = Convert.ToInt32(sqlDt.Rows[i]["accountID"]),
-                            userName = sqlDt.Rows[i]["userName"].ToString(),
-                            password = sqlDt.Rows[i]["password"].ToString(),
-                            firstName = sqlDt.Rows[i]["firstName"].ToString(),
-                            lastName = sqlDt.Rows[i]["lastName"].ToString(),
-                            email = sqlDt.Rows[i]["email"].ToString()
-                        });
+                    accounts.Add(new Models.Account
+                    {
+                        accountID = Convert.ToInt32(sqlDt.Rows[i]["accountID"]),
+                        userName = sqlDt.Rows[i]["userName"].ToString(),
+                        password = sqlDt.Rows[i]["password"].ToString(),
+                        firstName = sqlDt.Rows[i]["firstName"].ToString(),
+                        lastName = sqlDt.Rows[i]["lastName"].ToString(),
+                        email = sqlDt.Rows[i]["email"].ToString()
+                    });
                 }
                 //convert the list of accounts to an array and return!
                 return accounts.ToArray();
@@ -532,6 +548,8 @@ namespace ProjectTemplate
                 sqlConnection.Close();
             }
         }
+
+
 
     }
 }

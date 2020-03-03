@@ -31,7 +31,7 @@
         }
     </style>
     <script type="text/javascript">
-        
+
         function LogOff() {
             var webMethod = "ProjectServices.asmx/LogOff";
             $.ajax({
@@ -78,7 +78,7 @@
             else {
                 document.getElementById("userphoto").src = "Image/" + accountData["imageFileName"];
             }
-         
+
             // load pet info part
             var petinfo;
             var accID = accountData["accountID"]
@@ -116,7 +116,7 @@
                     alert("boom...");
                 }
             });
-        }      
+        }
     </script>
 </head>
 
@@ -175,7 +175,7 @@
             <div class="col-md-4 mb-5" id="petcard" style="display:block;">
                 <div class="card h-100">
                     <div class="card-body">
-                        <img id="petphoto" src="" width="300" height="200" style="object-fit:contain"/>
+                        <img id="petphoto" src="" width="300" height="200" style="object-fit:contain" />
                         <h2 class="card-title" id="petname">Pet Name</h2>
                         <p class="card-text" id="petbreed" style="font-size:20px;">This should be the pet breed</p>
                         <p class="card-text" id="petgender" style="font-size:20px;">This should be the pet gender</p>

@@ -15,10 +15,6 @@
         function AddPetInfo(petName, breed, gender, age, bio) {
             var webMethod = "ProjectServices.asmx/AddPet";
             var parameters = "{\"petName\":\"" + encodeURI(petName) + "\",\"breed\":\"" + encodeURI(breed) + "\",\"gender\":\"" + encodeURI(gender) + "\",\"age\":\"" + encodeURI(age) + "\",\"bio\":\"" + encodeURI(bio) + "\"}";
-
-            var userId = localStorage.getItem('authenticatedUser');
-            var parameters = JSON.stringify({petName: encodeURI(petName), breed: encodeURI(breed), gender: encodeURI(gender), age: encodeURI(age), bio: encodeURI(bio)});
-
             $.ajax({
                 type: "POST",
                 url: webMethod,

@@ -43,7 +43,7 @@
             //because we want to wrap our keynames and values in double quotes so we have to
             //escape the double quotes (because the overall string we're creating is in double quotes!)
             var parameters = "{\"uName\":\"" + encodeURI(uName) + "\",\"pass\":\"" + encodeURI(pass) + "\"}";
-            
+
             //jQuery ajax method
             $.ajax({
                 //post is more secure than get, and allows
@@ -64,16 +64,16 @@
                     //since our logon web method simply returns a true/false, that value is mapped
                     //to a generic property of the server response called d (I assume short for data
                     //but honestly I don't know...)
-                    
-                    if (msg.d === ""){
-                        account = { "userName": "none"};
+
+                    if (msg.d === "") {
+                        account = { "userName": "none" };
                     }
                     else {
                         account = JSON.parse(msg.d);
-                        
-                        
+
+
                     }
-                    if (account["userName"] === uName) {                
+                    if (account["userName"] === uName) {
                         window.localStorage.setItem("account", msg.d);
                         location.href = "./AccountPage.html"
                     }
@@ -128,7 +128,7 @@
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
         <br />
         <button class="btn btn-lg btn-primary btn-block" type="submit" style="display:block" id="signbtn">Sign in</button>
-        <button class="btn btn-primary btn-lg btn-block"style="display: none" id="spsignbtn">
+        <button class="btn btn-primary btn-lg btn-block" style="display: none" id="spsignbtn">
             <span class="spinner-border spinner-border-sm"></span>
             Loading..
         </button>

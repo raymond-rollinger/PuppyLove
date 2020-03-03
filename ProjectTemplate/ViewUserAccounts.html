@@ -12,13 +12,11 @@
     <link rel="stylesheet" href="CSS/LoadAccounts.css">
     <style>
 
-        body{
-            
+        body {
         }
-
     </style>
     <script type="text/javascript">
-            LoadAccounts();
+        LoadAccounts();
 
         function LogOff() {
 
@@ -72,11 +70,11 @@
                         for (var i = 0; i < accountsArray.length; i++) {
                             var acct;
                             acct = "<tr><th scope = \"row\">" + accountsArray[i].accountID + "</th ><td>" + accountsArray[i].userName +
-                                "</td><td>" + accountsArray[i].firstName + "</td><td>" + accountsArray[i].lastName + "</td><td style=\"width: 10 %\">" + 
+                                "</td><td>" + accountsArray[i].firstName + "</td><td>" + accountsArray[i].lastName + "</td><td style=\"width: 10 %\">" +
                                 "<button type=\"button\" class=\"btn btn-primary\">" + "<a href=\"mailto:" + accountsArray[i].email +
                                 "\" style=\"color: aliceblue\">" + "Send Email" + "</button>" + "</td><td style=\"width: 6 %\">" +
                                 "<button type=\"button\" class=\"btn btn-info\">" + "Edit" + "</button>" + "</td><td>" +
-                                "<button type=\"button\" class=\"btn btn-warning\" onclick='DeleteAccount(" + accountsArray[i].accountID + ")'>" + "Delete" + "</button>" + "</td></tr>"                       
+                                "<button type=\"button\" class=\"btn btn-warning\" onclick='DeleteAccount(" + accountsArray[i].accountID + ")'>" + "Delete" + "</button>" + "</td></tr>"
 
                             $("#accountsBox").append(acct);
                         }
@@ -109,7 +107,7 @@
             });
         }
 
-        // This function can be used later, I think to make it work, we just need to change the parameters and add more function in there. 
+        // This function can be used later, I think to make it work, we just need to change the parameters and add more function in there.
         /*
         function EditAccount() {
             var webMethod = "ProjectServices.asmx/UpdateAccount";
@@ -132,13 +130,13 @@
         }
         */
 
-</script>
+    </script>
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color:#ff6699">
         <div class="container ">
-            <a class="navbar-brand" href="#" style="font-family:Lobster; font-size:30px;">PuppyLove</a>
+            <a class="navbar-brand" href="./AccountPage.html" style="font-family:Lobster; font-size:30px;">PuppyLove</a>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
                     <a class="nav-link border border-secondary rounded" href="#" onclick="LogOff()" style="font-family:Odibee Sans; font-size:30px; background-color:#cc6699">Log Out</a>
@@ -149,7 +147,7 @@
     <table class="table table-hover table-striped" style="position:relative; width:70%; margin:auto; margin-top:100px">
         <thead>
             <tr>
-                <th scope="col" >Account ID</th>
+                <th scope="col">Account ID</th>
                 <th scope="col">User Name</th>
                 <th scope="col">First Name</th>
                 <th scope="col">Last Name</th>
@@ -158,9 +156,7 @@
                 <th scope="col" style="width:120px">Delete User</th>
             </tr>
         </thead>
-        <tbody id="accountsBox">
-
-        </tbody>
+        <tbody id="accountsBox"></tbody>
     </table>
     <!--
     <div class="container">
