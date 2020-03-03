@@ -1,0 +1,147 @@
+﻿<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>My Account</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!--DO NOT FORGET THIS SCRIPT TAG SO YOU CAN USE JQUERY!!!!!-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lobster|Odibee+Sans&display=swap" rel="stylesheet">
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            padding-top: 56px;
+        }
+
+        .background {
+            background-image: url('Image/index_back.jpeg');
+            position: fixed;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+            opacity: 0.30;
+        }
+    </style>
+    <script type="text/javascript">
+
+        function loadData() {
+            var accountData = JSON.parse(localStorage.getItem("account"))
+            if (accountData["isAdmin"] == "false") {
+                document.getElementById("btnAccounts").hidden = true;
+            }
+            document.getElementById("username").innerHTML = accountData["userName"];
+            document.getElementById("firstLast").innerHTML = accountData["firstName"] + " " + accountData["lastName"];
+            if (accountData["bio"] === "") {
+                document.getElementById("bio_msg").innerHTML = "You Don't have a BIO on your account!";
+            }
+            else {
+                document.getElementById("bio_msg").innerHTML = "BIO: " + accountData["bio"];
+            }
+            if (accountData["imageFileName"] === "") {
+                document.getElementById("userphoto").src = "Image/icon2.png";
+            }
+            else {
+                document.getElementById("userphoto").src = "Image/" + accountData["imageFileName"];
+            }
+
+            // load pet info part
+            var petinfo;
+            var accID = accountData["accountID"]
+            console.log(accID)
+            var webMethod = "ProjectServices.asmx/Randompet";
+            var parameters = "{\"accID\":\"" + encodeURI(accID) + "\"}";
+            $.ajax({
+                type: "POST",
+                url: webMethod,
+                data: parameters,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.d === "") {
+                        document.getElementById("petcard").style.display = "none";
+                        document.getElementById("blocker").className = "col-md-4 mb-5"
+                    }
+                    else {
+                        petinfo = JSON.parse(msg.d);
+                        console.log(petinfo)
+                        document.getElementById("petname").innerHTML = "<strong>Name: </strong>" + petinfo["petName"]
+                        document.getElementById("petbreed").innerHTML = "<strong>Breed: </strong>" + petinfo["breed"]
+                        document.getElementById("petgender").innerHTML = "<strong>Gender: </strong>" + petinfo["gender"]
+                        document.getElementById("petage").innerHTML = "<strong>Age: </strong>" + petinfo["age"]
+                        document.getElementById("petbio").innerHTML = "<strong>Bio: </strong>" + petinfo["petbio"]
+                        if (petinfo["imageFileName"] === "") {
+                            document.getElementById("petphoto").src = "Image/icon2.png";
+                        }
+                        else {
+                            document.getElementById("petphoto").src = "Image/" + petinfo["imageFileName"]
+                        }
+                    }
+                },
+                error: function (e) {
+                    alert("boom...");
+                }
+            });
+        }
+
+        function message() {
+            var email =
+        }
+    </script>
+</head>
+<body onload="loadData()">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color:#ff6699">
+        <div class="container ">
+            <a class="navbar-brand" href="#" style="font-family:Lobster; font-size:30px;">PuppyLove</a>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <p id="username" style="font-family:Odibee Sans; font-size:40px; padding-right:20px"></p>
+                </li>
+                <li class="nav-item active" style="font-family:Odibee Sans; font-size:40px; padding-right:20px">|</li>
+                <li class="nav-item active">
+                    <button class="btn btn-info btn-lg" onclick="LogOff()" style="font-family:Odibee Sans; font-size:25px; padding-right:20px">
+                        <span class="glyphicon glyphicon-log-out"></span> Log out
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- Page Content -->
+    <div class="background"></div>
+    <!-- /.row -->
+    <!-- Call to Action Well -->
+    <div class="card text-white my-5 py-4 text-center" style="background-color:#ff6699">
+        <div class="card-body">
+            <p class="text-white m-0" style="font-size:24px;">Select yes to match with a pet, and no to display a new one</p>
+        </div>
+    </div>
+    <!-- Content Row -->
+    <div class="row">
+        <div class="col-md-4 mb-5" id="petcard" style="display:block;">
+            <div class="card h-100">
+                <div class="card-body">
+                    <img id="petphoto" src="" width="300" height="200" />
+                    <h2 class="card-title" id="petname">Pet Name</h2>
+                    <p class="card-text" id="petbreed" style="font-size:20px;">This should be the pet breed</p>
+                    <p class="card-text" id="petgender" style="font-size:20px;">This should be the pet gender</p>
+                    <p class="card-text" id="petage" style="font-size:20px;">This should be the pet age</p>
+                    <p class="card-text" id="petbio" style="font-size:20px;">This should be the pet bio</p>
+                </div>
+                <div class="card-footer">
+                    <a href="./matching.html" class="btn btn-primary btn-sm" style="font-size:20px; float:left;">No</a>
+                    <a onclick="message()" id="emailUser" href="mailto:" class="btn btn-primary btn-sm" style="font-size:20px; float:right;">Yes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+    </div>
+    <!-- /.container -->
+</body>
+</html>
