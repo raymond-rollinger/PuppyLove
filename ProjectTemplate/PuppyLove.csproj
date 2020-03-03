@@ -105,8 +105,11 @@
     <Content Include="CSS\LoadAccounts.css" />
     <Content Include="ViewUserAccounts.html" />
     <Content Include="addPet.html" />
+    <Content Include="matching.html" />
+
     <Content Include="Image\puppy.jpg" />
     <Content Include="Image\cat.png" />
+
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />

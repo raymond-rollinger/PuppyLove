@@ -58,6 +58,7 @@
         function loadData() {
             var accountData = JSON.parse(localStorage.getItem("account"))
             if (accountData["isAdmin"] == "false") {
+
                 document.getElementById("btnAccounts").hidden = true;
             }
             document.getElementById("username").innerHTML = accountData["userName"];
@@ -176,6 +177,8 @@
                     </div>
                     <div class="card-footer">
                         <a href="./profileInfo.html" class="btn btn-primary btn-sm" style="font-size:20px; float:right;">Edit This Pet!</a>
+                        <a href="./matching.html" class="btn btn-primary btn-sm" style="font-size:20px; float:left;">Find a Match!</a>
+
                     </div>
                 </div>
             </div>

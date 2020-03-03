@@ -23,6 +23,7 @@ namespace ProjectTemplate
 		private string dbPass = "!!Ciscapstoners";
 		private string dbName = "ciscapstoners";
 
+        public string tmpId = "";
 		////////////////////////////////////////////////////////////////////////
 		
 		////////////////////////////////////////////////////////////////////////
@@ -326,15 +327,27 @@ namespace ProjectTemplate
             sqlConnection.Close();
         }
 
+            public string RandomId() {
+
+            Random rnd = new Random();
+            int rndNum = rnd.Next(1, 11);  // chooses a number between 1 and 10
+            tmpId = rndNum.ToString();
+
+            return tmpId;
+        }
+
         [WebMethod(EnableSession = true)] //NOTICE: gotta enable session on each individual method
-        public string Loadpet(string accID)
+        public string Randompet(string accID)
         {
             //we return this flag to tell them if they logged in or not
-            string petinfo="";
+            string petinfo = "";
+            
             //our connection string comes from our web.config file like we talked about earlier
             string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
             //here's our query.  A basic select with nothing fancy.  Note the parameters that begin with @
             //NOTICE: we added admin to what we pull, so that we can store it along with the id in the session
+
+            accID = RandomId();
 
             string sqlSelect = "SELECT profileid, petName, accountid, breed, gender, age, bio, imageFileName FROM profiles WHERE accountid=@userValue";
 
@@ -348,7 +361,6 @@ namespace ProjectTemplate
             //we decode them because they came to us via the web so they were encoded
             //for transmission (funky characters escaped, mostly)
             sqlCommand.Parameters.AddWithValue("@userValue", HttpUtility.UrlDecode(accID));
-            
 
             //a data adapter acts like a bridge between our command object and 
             //the data we are trying to get back and put in a table object
@@ -381,6 +393,7 @@ namespace ProjectTemplate
 
             }
             //return the result!
+
             return petinfo;
         }
 
