@@ -31,7 +31,8 @@
     <script type="text/javascript">
 
         function loadData() {
-            var accountData = JSON.parse(localStorage.getItem("account"))
+       
+            var accountData = JSON.parse(localStorage.getItem("accountsArray[i]"))
             if (accountData["isAdmin"] == "false") {
                 document.getElementById("btnAccounts").hidden = true;
             }
