@@ -285,6 +285,7 @@ namespace ProjectTemplate
             
         }
 
+        [WebMethod(EnableSession = true)]
         public void AddPet(string petName, string breed, string gender, string age, string bio)
         {
             //our connection string comes from our web.config file like we talked about earlier
