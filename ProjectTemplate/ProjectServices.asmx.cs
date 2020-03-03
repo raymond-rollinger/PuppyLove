@@ -457,6 +457,7 @@ namespace ProjectTemplate
                 string sqlSelect = "delete from accounts where accountID=@idValue";
 
                 MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+                MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
 
                 sqlCommand.Parameters.AddWithValue("@idValue", HttpUtility.UrlDecode(id));
 
