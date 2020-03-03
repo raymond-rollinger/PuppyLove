@@ -505,5 +505,31 @@ namespace ProjectTemplate
                 return new Models.Account[0];
             }
         }
+
+        [WebMethod(EnableSession = true)]
+        public void DeleteAccount(string id)
+        {
+            if (Session["isAdmin"].ToString() == "true")
+            {
+                string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
+                string sqlSelect = "delete from accounts where accountID=@idValue";
+
+                MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+                MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+
+                sqlCommand.Parameters.AddWithValue("@idValue", HttpUtility.UrlDecode(id));
+
+                sqlConnection.Open();
+                try
+                {
+                    sqlCommand.ExecuteNonQuery();
+                }
+                catch (Exception e)
+                {
+                }
+                sqlConnection.Close();
+            }
+        }
+
     }
 }

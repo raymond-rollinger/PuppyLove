@@ -61,6 +61,9 @@
 
                 document.getElementById("btnAccounts").hidden = true;
             }
+            else {
+                document.getElementById("pAdmin").innerHTML = "Administrator";
+            }
             document.getElementById("username").innerHTML = accountData["userName"];
             document.getElementById("firstLast").innerHTML = accountData["firstName"] + " " + accountData["lastName"];
             if (accountData["bio"] === "") {
@@ -124,6 +127,9 @@
         <div class="container ">
             <a class="navbar-brand" href="#" style="font-family:Lobster; font-size:30px;">PuppyLove</a>
             <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <p id="pAdmin" style="background-color: yellow; padding:0; margin:0; font-size:small;"></p>
+                </li> 
                 <li class="nav-item active">
                     <p id="username" style="font-family:Odibee Sans; font-size:40px; padding-right:20px"></p>
                 </li>
